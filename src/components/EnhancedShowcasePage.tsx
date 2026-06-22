@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'motion/react';
 import {
   ClayButton,
   ClayCard,
@@ -17,7 +17,6 @@ import {
   BentoGrid,
   BentoItem,
   FloatingContainer,
-  FloatingGroup,
   ClayRebound,
   PhysicsProvider,
   physicsPresets,
@@ -28,121 +27,137 @@ import { AtmosphereCanvas } from './enhanced/effects/AtmosphereCanvas';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { useResponsive } from './enhanced/responsive/ResponsiveSystem';
 import { ErrorBoundary } from './ErrorBoundary';
+import { MochiLoader } from './MochiLoader';
+import MochiBounce from './MochiBounce';
 
+// ─── Icons ────────────────────────────────────────────────────────────────────
 const Icons = {
-  Search: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
-  Bell: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
-  Chart: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>,
-  Calendar: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>,
-  Message: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>,
-  Moon: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>,
-  Sun: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>,
-  Audio: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
-  VolumeOff: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" x2="17" y1="9" y2="15"/><line x1="17" x2="23" y1="9" y2="15"/></svg>,
-  Zap: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
-  Layers: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
-  Code: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
-  Figma: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 23H12v-7H8.5A3.5 3.5 0 0 1 5 19.5z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>,
-  Accessibility: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>,
-  Palette: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.01 17.461 2 12 2z"/></svg>,
+  Search: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
+  Bell: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>,
+  Chart: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>,
+  Moon: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>,
+  Sun: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2m-7.07-14.07 1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2m-2.93-7.07-1.41 1.41M6.34 17.66l-1.41 1.41"/></svg>,
+  Audio: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/></svg>,
+  VolumeOff: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" x2="17" y1="9" y2="15"/><line x1="17" x2="23" y1="9" y2="15"/></svg>,
+  Zap: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>,
+  Layers: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>,
+  Code: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>,
+  Figma: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 16H12v3.5a3.5 3.5 0 1 1-7 0z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>,
+  Accessibility: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>,
+  Palette: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.01 17.461 2 12 2z"/></svg>,
+  GameController: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="17" cy="10" r="1" fill="currentColor"/><path d="M17.32 5H6.68a4 4 0 0 0-3.978 3.59c-.006.052-.01.101-.017.152C2.604 9.416 2 14.456 2 16a3 3 0 0 0 3 3c1 0 1.5-.5 2-1l1.414-1.414A2 2 0 0 1 9.828 16h4.344a2 2 0 0 1 1.414.586L17 18c.5.5 1 1 2 1a3 3 0 0 0 3-3c0-1.544-.604-6.584-.685-7.258-.007-.05-.011-.1-.017-.151A4 4 0 0 0 17.32 5z"/></svg>,
+  Copy: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg>,
+  ArrowRight: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>,
+  GitHub: () => <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>,
 };
 
-const sectionIds = ['hero', 'about', 'features', 'components', 'teams', 'start'];
-
-const sectionLabels: Record<string, string> = {
-  hero: 'Home',
-  about: 'About',
-  features: 'Features',
-  components: 'Components',
-  teams: 'Teams',
-  start: 'Get Started',
+// ─── Constants ────────────────────────────────────────────────────────────────
+const SECTION_IDS = ['hero', 'about', 'features', 'components', 'game', 'teams', 'start'];
+const SECTION_LABELS: Record<string, string> = {
+  hero: 'Home', about: 'About', features: 'Features',
+  components: 'Components', game: 'Play', teams: 'Teams', start: 'Install',
 };
 
-const ScrollReveal: React.FC<{
-  children: React.ReactNode;
-  delay?: number;
-  reducedMotion?: boolean;
-}> = ({ children, delay = 0, reducedMotion }) => {
+// ─── Shared primitives ────────────────────────────────────────────────────────
+const ScrollReveal: React.FC<{ children: React.ReactNode; delay?: number; reducedMotion?: boolean }> = ({ children, delay = 0, reducedMotion }) => {
   if (reducedMotion) return <>{children}</>;
   return (
     <motion.div
-      initial={{ opacity: 0, y: 40 }}
+      initial={{ opacity: 0, y: 36 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-80px' }}
-      transition={{ duration: 0.6, delay, ease: [0.34, 1.56, 0.64, 1] }}
+      viewport={{ once: true, margin: '-72px' }}
+      transition={{ duration: 0.55, delay, ease: [0.34, 1.56, 0.64, 1] }}
     >
       {children}
     </motion.div>
   );
 };
 
-const SectionHeading: React.FC<{ title: string; subtitle?: string; reducedMotion?: boolean }> = ({ title, subtitle, reducedMotion }) => {
-  if (reducedMotion) {
-    return (
-      <div style={{ marginBottom: 32 }}>
-        <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: subtitle ? 12 : 0 }}>
-          {title}
-        </h2>
-        {subtitle && <p style={{ color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}>{subtitle}</p>}
-      </div>
-    );
-  }
-  return (
-    <div style={{ marginBottom: 32 }}>
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: '-60px' }}
-        transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
-        style={{
-          fontSize: 'clamp(1.5rem, 3vw, 2rem)',
-          fontWeight: 700,
-          color: 'var(--text-primary)',
-          marginBottom: subtitle ? 12 : 0,
-        }}
-      >
+const SectionLabel: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p style={{
+    fontSize: 'var(--type-label-size)',
+    fontWeight: 'var(--type-label-weight)' as any,
+    letterSpacing: 'var(--type-label-tracking)',
+    textTransform: 'var(--type-label-transform)' as any,
+    color: 'var(--mochi-mint-vivid)',
+    marginBottom: 10,
+  }}>
+    {children}
+  </p>
+);
+
+const SectionHeading: React.FC<{ label?: string; title: string; subtitle?: string; reducedMotion?: boolean; centered?: boolean }> = ({
+  label, title, subtitle, reducedMotion, centered,
+}) => {
+  const align = centered ? 'center' : 'left';
+  const inner = (
+    <div style={{ marginBottom: 40, textAlign: align }}>
+      {label && <SectionLabel>{label}</SectionLabel>}
+      <h2 style={{
+        fontSize: 'var(--type-title-size)',
+        fontWeight: 'var(--type-title-weight)' as any,
+        lineHeight: 'var(--type-title-line)',
+        letterSpacing: 'var(--type-title-tracking)',
+        color: 'var(--text-primary)',
+        marginBottom: subtitle ? 14 : 0,
+      }}>
         {title}
-      </motion.h2>
+      </h2>
       {subtitle && (
-        <motion.p
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-60px' }}
-          transition={{ duration: 0.5, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
-          style={{ color: 'var(--text-secondary)', maxWidth: 600, lineHeight: 1.6 }}
-        >
+        <p style={{
+          fontSize: 'var(--type-body-size)',
+          color: 'var(--text-secondary)',
+          maxWidth: centered ? 560 : 640,
+          margin: centered ? '0 auto' : undefined,
+          lineHeight: 'var(--type-body-line)',
+        }}>
           {subtitle}
-        </motion.p>
+        </p>
       )}
     </div>
   );
+  if (reducedMotion) return inner;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+    >
+      {inner}
+    </motion.div>
+  );
 };
 
+// ─── Main showcase ────────────────────────────────────────────────────────────
 const ShowcaseContent: React.FC = () => {
-  const [theme, setTheme] = useState('light');
+  const [theme, setTheme] = useState(() => {
+    if (typeof localStorage !== 'undefined') return localStorage.getItem('theme') || 'light';
+    return 'light';
+  });
   const [sliderValue, setSliderValue] = useState(65);
   const [toggleChecked, setToggleChecked] = useState(true);
-  const [inputValue, setInputValue] = useState('');
-  const [reboundTrigger, setReboundTrigger] = useState(false);
-  const [physicsPreset, setPhysicsPreset] = useState<keyof typeof physicsPresets>('clay');
   const [showModal, setShowModal] = useState(false);
-  const [progressValue, setProgressValue] = useState(72);
   const [segmentValue, setSegmentValue] = useState('design');
+  const [reboundTrigger, setReboundTrigger] = useState(false);
+  const [copied, setCopied] = useState(false);
 
   const audio = useMochiAudio();
   const { prefersReducedMotion } = useResponsive();
-  const { activeId, scrollTo } = useActiveSection(sectionIds);
+  const { activeId, scrollTo } = useActiveSection(SECTION_IDS);
 
-  const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll();
   const progressBarWidth = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
 
   useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      const num = parseInt(e.key);
-      if (num >= 1 && num <= sectionIds.length) {
-        scrollTo(sectionIds[num - 1]);
-      }
+      const n = parseInt(e.key);
+      if (n >= 1 && n <= SECTION_IDS.length) scrollTo(SECTION_IDS[n - 1]);
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
@@ -150,21 +165,20 @@ const ShowcaseContent: React.FC = () => {
 
   const toggleTheme = useCallback(() => {
     audio.success();
-    const newTheme = theme === 'light' ? 'dark' : 'light';
-    setTheme(newTheme);
-    document.documentElement.setAttribute('data-theme', newTheme);
-    localStorage.setItem('theme', newTheme);
-  }, [theme, audio]);
+    setTheme(t => t === 'light' ? 'dark' : 'light');
+  }, [audio]);
 
   const triggerRebound = useCallback(() => {
-    audio.playClick('soft');
+    audio.playClick?.('soft');
     setReboundTrigger(true);
     setTimeout(() => setReboundTrigger(false), 600);
   }, [audio]);
 
-  const toggleAudio = useCallback(() => {
-    if (audio.isEnabled) audio.disable();
-    else audio.enable();
+  const copyInstall = useCallback(() => {
+    navigator.clipboard.writeText('npm install @mochi-ui/react');
+    audio.success?.();
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   }, [audio]);
 
   const chartData = [
@@ -174,405 +188,354 @@ const ShowcaseContent: React.FC = () => {
     { value: 85, label: 'Q4', colorway: 'blue' as const },
   ];
 
-  return (
-    <div ref={containerRef} style={{ minHeight: '100vh', background: 'var(--bg-base)', transition: 'background 0.3s' }}>
-      {/* Progress Bar */}
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          height: 3,
-          background: 'var(--mochi-mint)',
-          zIndex: 1000,
-          width: progressBarWidth,
-        }}
-      />
+  // ── Shared style helpers ───────────────────────────────────────────────────
+  const sectionPad = { padding: 'var(--space-20) 0' };
+  const iconBox = (bg: string) => ({
+    width: 44, height: 44,
+    borderRadius: 'var(--radius-squircle-sm)',
+    background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center',
+    color: 'white', flexShrink: 0,
+    boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+  } as React.CSSProperties);
 
-      {/* Header */}
+  return (
+    <div style={{ minHeight: '100vh', background: 'var(--bg-base)', transition: 'background 0.3s, color 0.3s' }}>
+
+      {/* ── Scroll progress bar ── */}
+      <motion.div style={{
+        position: 'fixed', top: 0, left: 0, height: 3,
+        background: 'linear-gradient(90deg, var(--mochi-mint-vivid), var(--mochi-lavender-vivid))',
+        zIndex: 1000, width: progressBarWidth,
+        borderRadius: '0 3px 3px 0',
+      }} />
+
+      {/* ════ HEADER ════════════════════════════════════════════════════════ */}
       <header style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
-        background: 'rgba(var(--bg-surface-rgb, 255, 248, 240), 0.85)',
-        backdropFilter: 'blur(20px) saturate(180%)',
-        WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        borderBottom: '1px solid rgba(0,0,0,0.05)',
+        position: 'sticky', top: 0, zIndex: 100,
+        background: 'rgba(var(--bg-surface-rgb, 255,248,245), 0.88)',
+        backdropFilter: 'blur(24px) saturate(180%)',
+        WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+        borderBottom: '1px solid var(--border-subtle)',
       }}>
         <div style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          padding: '16px 24px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          maxWidth: 1200, margin: '0 auto', padding: '14px 24px',
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16,
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <FloatingContainer amplitude={4} frequency={0.8}>
-              <motion.div
-                style={{
-                  width: 40,
-                  height: 40,
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, var(--mochi-mint), var(--mochi-sage))',
-                  boxShadow: 'var(--shadow-clay)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 700,
-                  color: 'white',
-                  fontSize: 18,
-                  cursor: 'pointer',
-                }}
-                whileHover={{ scale: 1.1, rotate: 10 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={() => scrollTo('hero')}
-              >
-                M
-              </motion.div>
-            </FloatingContainer>
-            <div>
-              <h1 style={{ fontSize: 20, fontWeight: 700, color: 'var(--text-primary)' }}>Mochi UI</h1>
-              <p style={{ fontSize: 12, color: 'var(--text-secondary)' }}>Claymorphism Design System</p>
+          {/* Wordmark */}
+          <motion.button
+            onClick={() => scrollTo('hero')}
+            style={{
+              display: 'flex', alignItems: 'center', gap: 10,
+              background: 'none', border: 'none', cursor: 'pointer', padding: 0,
+            }}
+            whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}
+          >
+            <div style={{
+              width: 36, height: 36,
+              borderRadius: 'var(--radius-squircle-sm)',
+              background: 'linear-gradient(135deg, var(--mochi-mint), var(--mochi-mint-vivid))',
+              boxShadow: 'var(--shadow-glow-mint)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontWeight: 900, color: 'white', fontSize: 16,
+            }}>M</div>
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1.1 }}>Mochi UI</div>
+              <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-tertiary)' }}>Claymorphism</div>
             </div>
-          </div>
+          </motion.button>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <ClayTooltip content={audio.isEnabled ? 'Audio On' : 'Audio Off'}>
-              <ClayButton
-                size="sm"
-                colorway={audio.isEnabled ? 'mint' : 'neutral'}
-                onClick={toggleAudio}
-              >
+          {/* Actions */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <ClayTooltip content={audio.isEnabled ? 'Mute' : 'Unmute'}>
+              <ClayButton size="sm" colorway={audio.isEnabled ? 'mint' : 'neutral'} onClick={() => audio.isEnabled ? audio.disable() : audio.enable()}>
                 {audio.isEnabled ? <Icons.Audio /> : <Icons.VolumeOff />}
               </ClayButton>
             </ClayTooltip>
-
-            <select
-              value={physicsPreset}
-              onChange={(e) => setPhysicsPreset(e.target.value as keyof typeof physicsPresets)}
-              style={{
-                padding: '8px 16px',
-                borderRadius: 12,
-                border: 'none',
-                background: 'var(--bg-card)',
-                boxShadow: 'var(--shadow-clay)',
-                fontSize: 13,
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-              }}
-            >
-              {Object.keys(physicsPresets).map(preset => (
-                <option key={preset} value={preset}>
-                  {preset.charAt(0).toUpperCase() + preset.slice(1)}
-                </option>
-              ))}
-            </select>
-
-            <ClayButton size="sm" colorway="neutral" onClick={toggleTheme}>
+            <ClayButton size="sm" colorway="neutral" onClick={toggleTheme} aria-label="Toggle theme">
               {theme === 'light' ? <Icons.Moon /> : <Icons.Sun />}
+            </ClayButton>
+            <ClayButton size="sm" colorway="mint" onClick={() => window.open('https://github.com/qt314wink/mochi-ui', '_blank')} icon={<Icons.GitHub />} iconPosition="leading">
+              GitHub
             </ClayButton>
           </div>
         </div>
 
-        {/* Section Navigation */}
+        {/* Subnav */}
         <nav style={{
-          maxWidth: 1200,
-          margin: '0 auto',
-          padding: '0 24px 12px',
-          display: 'flex',
-          gap: 8,
-          overflowX: 'auto',
-          scrollbarWidth: 'none',
+          maxWidth: 1200, margin: '0 auto', padding: '0 24px 10px',
+          display: 'flex', gap: 4, overflowX: 'auto', scrollbarWidth: 'none',
         }}>
-          {sectionIds.map((id) => (
+          {SECTION_IDS.map(id => (
             <motion.button
               key={id}
               onClick={() => scrollTo(id)}
-              aria-label={`Go to ${sectionLabels[id]} section`}
+              aria-label={`Go to ${SECTION_LABELS[id]}`}
               style={{
-                padding: '8px 16px',
-                borderRadius: 12,
+                padding: '6px 14px',
+                borderRadius: 'var(--radius-squircle-xs)',
                 border: 'none',
-                background: activeId === id ? 'var(--mochi-mint)' : 'transparent',
+                background: activeId === id
+                  ? 'linear-gradient(135deg, var(--mochi-mint), var(--mochi-mint-vivid))'
+                  : 'transparent',
                 color: activeId === id ? 'white' : 'var(--text-secondary)',
-                fontSize: 14,
-                fontWeight: 500,
-                cursor: 'pointer',
-                whiteSpace: 'nowrap',
+                fontSize: 13, fontWeight: activeId === id ? 700 : 500,
+                cursor: 'pointer', whiteSpace: 'nowrap',
+                boxShadow: activeId === id ? 'var(--shadow-glow-mint)' : 'none',
               }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
             >
-              {sectionLabels[id]}
+              {SECTION_LABELS[id]}
             </motion.button>
           ))}
         </nav>
       </header>
 
-      {/* HERO */}
-      <section id="hero" style={{ padding: '96px 24px 80px', position: 'relative', overflow: 'hidden' }}>
-        <motion.div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
-          <FloatingContainer amplitude={6} frequency={0.5}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: 8,
-              padding: '8px 16px',
-              borderRadius: 100,
-              background: 'var(--bg-card)',
-              boxShadow: 'var(--shadow-clay)',
-              fontSize: 13,
-              color: 'var(--text-secondary)',
-              marginBottom: 24,
-            }}>
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: 'var(--mochi-mint)' }} />
-              v2.0 Now Available — Open Source
-            </div>
-          </FloatingContainer>
-          <h1 style={{
-            fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
-            fontWeight: 800,
-            lineHeight: 1.1,
-            marginBottom: 20,
-            color: 'var(--text-primary)',
-          }}>
-            The{' '}
-            <span style={{
-              background: 'linear-gradient(135deg, var(--mochi-mint), var(--mochi-baby-blue))',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text',
-            }}>
-              Claymorphism
-            </span>{' '}
-            Design System
-          </h1>
-          <p style={{
-            fontSize: 'clamp(1.05rem, 2vw, 1.25rem)',
-            color: 'var(--text-secondary)',
-            marginBottom: 36,
-            maxWidth: 560,
-            margin: '0 auto 36px',
-            lineHeight: 1.6,
-          }}>
-            Mochi UI is a modern React UI component library built around claymorphism — 
-            soft, tactile interfaces with spring physics, haptic feedback, and accessible 
-            design tokens. Ship faster with components that feel alive.
-          </p>
-          <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); scrollTo('components'); }}>
-              Explore Components
-            </ClayButton>
-            <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>
-              View on GitHub
-            </ClayButton>
-          </div>
-        </motion.div>
-      </section>
-
-      {/* TRUST BAR */}
-      <section style={{ padding: '32px 24px', borderTop: '1px solid rgba(0,0,0,0.05)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
-          <p style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 16 }}>
-            Built for modern product teams with
-          </p>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', alignItems: 'center' }}>
-            {['Astro', 'React 19', 'Motion', 'TypeScript', 'Three.js', 'Web Audio API'].map((tech) => (
-              <span key={tech} style={{
-                padding: '6px 14px',
-                borderRadius: 100,
+      {/* ════ HERO ══════════════════════════════════════════════════════════ */}
+      <section id="hero" style={{ padding: 'var(--space-24) 24px var(--space-20)', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ maxWidth: 800, margin: '0 auto', textAlign: 'center' }}>
+          <FloatingContainer amplitude={5} frequency={0.6}>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, ease: [0.34, 1.56, 0.64, 1] }}
+              style={{
+                display: 'inline-flex', alignItems: 'center', gap: 8,
+                padding: '7px 16px',
+                borderRadius: 'var(--radius-pill)',
                 background: 'var(--bg-card)',
                 boxShadow: 'var(--shadow-clay)',
-                fontSize: 13,
-                fontWeight: 600,
+                fontSize: 12, fontWeight: 700,
+                letterSpacing: '0.06em', textTransform: 'uppercase',
                 color: 'var(--text-secondary)',
-              }}>
-                {tech}
-              </span>
-            ))}
-          </div>
+                marginBottom: 24,
+              }}
+            >
+              <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--mochi-mint-vivid)' }} />
+              v2.0 — Open Source
+            </motion.div>
+          </FloatingContainer>
+
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
+            style={{
+              fontSize: 'var(--type-display-size)',
+              fontWeight: 'var(--type-display-weight)' as any,
+              lineHeight: 'var(--type-display-line)',
+              letterSpacing: 'var(--type-display-tracking)',
+              marginBottom: 22, color: 'var(--text-primary)',
+            }}
+          >
+            The{' '}
+            <span style={{
+              background: 'linear-gradient(120deg, var(--mochi-mint) 0%, var(--mochi-lavender-vivid) 100%)',
+              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', backgroundClip: 'text',
+            }}>
+              Claymorphism
+            </span>
+            <br />Design System
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.22, ease: [0.34, 1.56, 0.64, 1] }}
+            style={{
+              fontSize: 'clamp(1rem, 1.8vw, 1.2rem)',
+              color: 'var(--text-secondary)',
+              maxWidth: 540, margin: '0 auto 36px',
+              lineHeight: 'var(--type-body-line)',
+            }}
+          >
+            Soft, tactile React components with spring physics, squircle geometry,
+            haptic feedback, and accessible design tokens. Ship interfaces that{' '}
+            <em style={{ color: 'var(--text-primary)', fontStyle: 'normal', fontWeight: 600 }}>feel alive</em>.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.34, ease: [0.34, 1.56, 0.64, 1] }}
+            style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}
+          >
+            <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick?.('soft'); scrollTo('components'); }} icon={<Icons.ArrowRight />} iconPosition="trailing">
+              Explore Components
+            </ClayButton>
+            <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish?.(); scrollTo('game'); }} icon={<Icons.GameController />} iconPosition="leading">
+              Play the Game
+            </ClayButton>
+          </motion.div>
         </div>
       </section>
 
-      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px 48px' }}>
+      {/* ════ TRUST BAR ═════════════════════════════════════════════════════ */}
+      <div style={{
+        borderTop: '1px solid var(--border-subtle)',
+        borderBottom: '1px solid var(--border-subtle)',
+        padding: '20px 24px',
+      }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'center', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          <span style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginRight: 6 }}>Built with</span>
+          {['Astro', 'React 19', 'Motion', 'TypeScript', 'Three.js', 'Web Audio'].map(tech => (
+            <span key={tech} style={{
+              padding: '5px 12px',
+              borderRadius: 'var(--radius-squircle-xs)',
+              background: 'var(--bg-card)',
+              boxShadow: 'var(--shadow-lift-sm)',
+              fontSize: 12, fontWeight: 600, color: 'var(--text-secondary)',
+            }}>
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
 
-        {/* ABOUT */}
-        <section id="about" style={{ padding: '80px 24px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48, alignItems: 'center' }}>
+      <main style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px 80px' }}>
+
+        {/* ════ ABOUT ═════════════════════════════════════════════════════ */}
+        <section id="about" style={sectionPad}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 56, alignItems: 'center' }}>
             <ScrollReveal reducedMotion={prefersReducedMotion}>
-              <div>
-                <div style={{ marginBottom: 16 }}><ClayBadge colorway="mint">What is Claymorphism?</ClayBadge></div>
-                <h2 style={{ fontSize: 'clamp(1.75rem, 3vw, 2.25rem)', fontWeight: 700, marginBottom: 16, color: 'var(--text-primary)', lineHeight: 1.2 }}>
-                  Soft UI that responds to touch
-                </h2>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, marginBottom: 16 }}>
-                  Claymorphism is the evolution of neumorphism — it replaces harsh shadows 
-                  with soft, organic depth that mimics real clay. Every element in Mochi UI 
-                  has physical presence: buttons compress when pressed, cards lift on hover, 
-                  and inputs recess into the surface.
-                </p>
-                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7 }}>
-                  Unlike flat design or glassmorphism, claymorphism creates interfaces that 
-                  feel <strong>tactile and responsive</strong>. It is the perfect middle ground 
-                  for product teams who want personality without sacrificing usability.
-                </p>
-              </div>
+              <SectionLabel>What is Claymorphism?</SectionLabel>
+              <h2 style={{
+                fontSize: 'var(--type-title-size)',
+                fontWeight: 900, lineHeight: 1.1,
+                letterSpacing: 'var(--type-title-tracking)',
+                marginBottom: 18, color: 'var(--text-primary)',
+              }}>
+                Soft UI that responds to touch
+              </h2>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 'var(--type-body-line)', marginBottom: 16 }}>
+                Claymorphism evolves neumorphism — replacing harsh shadows with organic, inflated depth that mimics physical clay. Every Mochi element has mass: buttons compress, cards lift, inputs recess.
+              </p>
+              <p style={{ color: 'var(--text-secondary)', lineHeight: 'var(--type-body-line)' }}>
+                Shape is enforced as <strong style={{ color: 'var(--text-primary)' }}>superellipse (squircle)</strong> throughout — no raw rectangles. The geometry itself communicates softness before a single animation fires.
+              </p>
             </ScrollReveal>
-            <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.15}>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <ClayCard colorway="mint" interactive={false}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                      <Icons.Zap />
+
+            <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.14}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                {[
+                  { icon: <Icons.Zap />, title: 'Spring Physics', desc: 'Real mass & damping on every interaction — no cubic-bezier guessing.', bg: 'var(--mochi-mint-vivid)', cw: 'mint' },
+                  { icon: <Icons.Accessibility />, title: 'Accessibility First', desc: 'WCAG 2.1 AA compliant with reduced motion & high-contrast support.', bg: 'var(--mochi-sky-blue)', cw: 'blue' },
+                  { icon: <Icons.Palette />, title: 'Design Tokens', desc: 'Figma-ready variables with automatic dark mode via CSS custom properties.', bg: 'var(--mochi-lavender-vivid)', cw: 'lavender' },
+                ].map(item => (
+                  <ClayCard key={item.title} colorway={item.cw as any} interactive={false}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
+                      <div style={iconBox(item.bg)}>{item.icon}</div>
+                      <div>
+                        <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 2 }}>{item.title}</div>
+                        <div style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{item.desc}</div>
+                      </div>
                     </div>
-                    <div>
-                      <div style={{ fontWeight: 600 }}>Spring Physics</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Every interaction uses real mass and damping</div>
-                    </div>
-                  </div>
-                </ClayCard>
-                <ClayCard colorway="blue" interactive={false}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                      <Icons.Accessibility />
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 600 }}>Accessibility First</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>WCAG 2.1 AA compliant with reduced motion support</div>
-                    </div>
-                  </div>
-                </ClayCard>
-                <ClayCard colorway="pink" interactive={false}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                    <div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-blossom)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                      <Icons.Palette />
-                    </div>
-                    <div>
-                      <div style={{ fontWeight: 600 }}>Design Tokens</div>
-                      <div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Figma-ready variables with automatic dark mode</div>
-                    </div>
-                  </div>
-                </ClayCard>
+                  </ClayCard>
+                ))}
               </div>
             </ScrollReveal>
           </div>
         </section>
 
-        {/* FEATURES */}
-        <section id="features" style={{ padding: '80px 24px' }}>
+        {/* ════ FEATURES ══════════════════════════════════════════════════ */}
+        <section id="features" style={sectionPad}>
           <ScrollReveal reducedMotion={prefersReducedMotion}>
-            <SectionHeading reducedMotion={prefersReducedMotion}
+            <SectionHeading
+              reducedMotion={prefersReducedMotion}
+              label="What's inside"
               title="Everything you need to ship faster"
-              subtitle="Mochi UI combines a comprehensive component library with production-ready tooling for design systems, product teams, and indie developers."
+              subtitle="A comprehensive component library with production-ready tooling for design systems, product teams, and indie developers."
             />
           </ScrollReveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: 20 }}>
             {[
-              { icon: <Icons.Zap />, title: 'Spring Physics', desc: 'Mass-spring-damper physics power every animation. No cubic-bezier guessing.', color: 'mint' },
-              { icon: <Icons.Layers />, title: '30+ Components', desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.', color: 'blue' },
-              { icon: <Icons.Figma />, title: 'Figma Compatible', desc: 'Design tokens map 1:1 between Figma variables and CSS custom properties.', color: 'pink' },
-              { icon: <Icons.Accessibility />, title: 'A11y Built-In', desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.', color: 'lavender' },
-              { icon: <Icons.Code />, title: 'TypeScript Native', desc: 'Fully typed props, strict inference, and IntelliSense-friendly APIs.', color: 'peach' },
-              { icon: <Icons.Palette />, title: 'Dark Mode', desc: 'Automatic theme switching with CSS custom properties and localStorage persistence.', color: 'neutral' },
-            ].map((feature, i) => (
-              <ScrollReveal key={feature.title} reducedMotion={prefersReducedMotion} delay={i * 0.08}>
-                <ClayCard colorway={feature.color as any} interactive={false}>
-                  <div style={{
-                    width: 44,
-                    height: 44,
-                    borderRadius: 12,
-                    background: 'var(--bg-base)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    color: 'var(--text-primary)',
-                    marginBottom: 12,
-                    boxShadow: 'var(--shadow-clay)',
-                  }}>
-                    {feature.icon}
-                  </div>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 6 }}>{feature.title}</h3>
-                  <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{feature.desc}</p>
+              { icon: <Icons.Zap />, title: 'Spring Physics', desc: 'Mass-spring-damper physics on every animation. Tunable presets.', bg: 'var(--mochi-mint-vivid)', cw: 'mint' },
+              { icon: <Icons.Layers />, title: '30+ Components', desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips.', bg: 'var(--mochi-sky-blue)', cw: 'blue' },
+              { icon: <Icons.Figma />, title: 'Figma-Ready', desc: 'Design tokens map 1:1 between Figma variables and CSS custom properties.', bg: 'var(--mochi-blush-pink)', cw: 'pink' },
+              { icon: <Icons.Accessibility />, title: 'A11y Built-In', desc: 'ARIA labels, keyboard navigation, focus rings, reduced-motion.', bg: 'var(--mochi-lavender-vivid)', cw: 'lavender' },
+              { icon: <Icons.Code />, title: 'TypeScript Native', desc: 'Fully typed props, strict inference, and IntelliSense-friendly APIs.', bg: 'var(--mochi-peach)', cw: 'peach' },
+              { icon: <Icons.Palette />, title: 'Dark Mode', desc: 'Automatic theme switching via CSS custom props and localStorage.', bg: 'var(--text-secondary)', cw: 'neutral' },
+            ].map((f, i) => (
+              <ScrollReveal key={f.title} reducedMotion={prefersReducedMotion} delay={i * 0.07}>
+                <ClayCard colorway={f.cw as any} interactive={false} style={{ height: '100%' }}>
+                  <div style={{ ...iconBox(f.bg), marginBottom: 14 }}>{f.icon}</div>
+                  <h3 style={{ fontSize: 16, fontWeight: 800, marginBottom: 6, letterSpacing: '-0.01em' }}>{f.title}</h3>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', lineHeight: 1.55 }}>{f.desc}</p>
                 </ClayCard>
               </ScrollReveal>
             ))}
           </div>
         </section>
 
-        {/* COMPONENTS */}
-        <section id="components" style={{ padding: '80px 24px' }}>
+        {/* ════ COMPONENTS ════════════════════════════════════════════════ */}
+        <section id="components" style={sectionPad}>
           <ScrollReveal reducedMotion={prefersReducedMotion}>
-            <SectionHeading reducedMotion={prefersReducedMotion}
+            <SectionHeading
+              reducedMotion={prefersReducedMotion}
+              label="Component kitchen"
               title="Production-ready components"
-              subtitle="Not just demos — real components you can drop into your next project. Every element is optimized for performance, accessibility, and delightful interaction."
+              subtitle="Not just demos — real components you can drop into your next project, optimised for performance, accessibility, and delight."
             />
           </ScrollReveal>
 
-          {/* Dashboard Card Demo */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.1}>
+          {/* ── Dashboard ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.08}>
             <div style={{ marginBottom: 48 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Dashboard Widget
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Dashboard widgets</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
                 <ClayCard colorway="mint">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <ClayBadge colorway="mint">Revenue</ClayBadge>
                     <ClayAvatar size="sm" fallback="JD" />
                   </div>
-                  <div style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 700, color: 'var(--mochi-mint)', marginBottom: 4 }}>$48.2K</div>
-                  <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16 }}>Monthly recurring revenue</p>
+                  <div style={{ fontSize: 'clamp(1.8rem,3.5vw,2.4rem)', fontWeight: 900, color: 'var(--mochi-mint-vivid)', marginBottom: 4, letterSpacing: '-0.03em' }}>$48.2K</div>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 14 }}>Monthly recurring revenue</p>
                   <ClaySlider value={72} onChange={() => {}} colorway="mint" showTicks label="Goal progress" />
                 </ClayCard>
                 <ClayCard colorway="blue">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 12 }}>
                     <ClayBadge colorway="blue">Users</ClayBadge>
-                    <div style={{ fontSize: 24 }}>👥</div>
+                    <span style={{ fontSize: 20 }}>👥</span>
                   </div>
-                  <div style={{ fontSize: 'clamp(2rem, 4vw, 2.5rem)', fontWeight: 700, color: 'var(--mochi-sky-blue)', marginBottom: 4 }}>2,847</div>
-                  <p style={{ fontSize: 14, color: 'var(--text-secondary)', marginBottom: 16 }}>Active subscribers this month</p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <div style={{ fontSize: 'clamp(1.8rem,3.5vw,2.4rem)', fontWeight: 900, color: 'var(--mochi-sky-blue)', marginBottom: 4, letterSpacing: '-0.03em' }}>2,847</div>
+                  <p style={{ fontSize: 13, color: 'var(--text-secondary)', marginBottom: 14 }}>Active subscribers this month</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Icons.Chart />
-                    <span style={{ fontSize: 13, color: 'var(--mochi-mint)', fontWeight: 600 }}>+12.5% from last month</span>
+                    <span style={{ fontSize: 13, color: 'var(--mochi-mint-vivid)', fontWeight: 700 }}>+12.5% from last month</span>
                   </div>
                 </ClayCard>
                 <ClayCard colorway="lavender" variant="stats">
-                  <h4 style={{ fontSize: 14, fontWeight: 600, color: 'var(--text-secondary)' }}>System Health</h4>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: 12, marginTop: 12 }}>
-                    {[
-                      { label: 'API', value: 99.9 },
-                      { label: 'Database', value: 98.2 },
-                      { label: 'CDN', value: 99.5 },
-                    ].map(item => (
-                      <div key={item.label}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 4 }}>
-                          <span>{item.label}</span>
-                          <span style={{ fontWeight: 600 }}>{item.value}%</span>
-                        </div>
-                        <ClayProgress value={item.value} size="sm" showValue={false} colorway={item.value > 99 ? 'mint' : 'peach'} />
+                  <h4 style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', marginBottom: 14, textTransform: 'uppercase', letterSpacing: '0.08em' }}>System Health</h4>
+                  {[
+                    { label: 'API', value: 99.9 },
+                    { label: 'Database', value: 98.2 },
+                    { label: 'CDN', value: 99.5 },
+                  ].map(item => (
+                    <div key={item.label} style={{ marginBottom: 10 }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, marginBottom: 5 }}>
+                        <span style={{ fontWeight: 500 }}>{item.label}</span>
+                        <span style={{ fontWeight: 700 }}>{item.value}%</span>
                       </div>
-                    ))}
-                  </div>
+                      <ClayProgress value={item.value} size="sm" showValue={false} colorway={item.value > 99 ? 'mint' : 'peach'} />
+                    </div>
+                  ))}
                 </ClayCard>
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Form Demo */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.15}>
+          {/* ── Form ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.12}>
             <div style={{ marginBottom: 48 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Settings Form
-              </h3>
-              <div style={{ maxWidth: 520, display: 'flex', flexDirection: 'column', gap: 20 }}>
-                <ClayInput placeholder="your@company.com" type="email" label="Work Email" icon={<Icons.Message />} />
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Settings form</p>
+              <div style={{ maxWidth: 500, display: 'flex', flexDirection: 'column', gap: 18 }}>
+                <ClayInput placeholder="you@company.com" type="email" label="Work Email" icon={<Icons.Bell />} />
                 <ClayInput placeholder="Enter password" type="password" label="Password" />
                 <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
-                  <ClayToggle colorway="mint" label="Enable notifications" checked={toggleChecked} onChange={(v) => { audio.pop(); setToggleChecked(v); }} />
+                  <ClayToggle colorway="mint" label="Notifications" checked={toggleChecked} onChange={v => { audio.pop?.(); setToggleChecked(v); }} />
                   <ClayToggle colorway="blue" label="Dark mode" checked={theme === 'dark'} onChange={toggleTheme} />
                 </div>
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div style={{ display: 'flex', gap: 10 }}>
                   <ClayButton colorway="mint">Save Changes</ClayButton>
                   <ClayButton colorway="neutral">Cancel</ClayButton>
                 </div>
@@ -580,20 +543,18 @@ const ShowcaseContent: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          {/* Buttons & Toggles */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.2}>
+          {/* ── Buttons ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.16}>
             <div style={{ marginBottom: 48 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Buttons & Controls
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, marginBottom: 24 }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Buttons & controls</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 10, marginBottom: 16 }}>
                 {(['mint', 'blue', 'pink', 'lavender', 'peach', 'neutral'] as const).map(cw => (
                   <ClayButton key={cw} colorway={cw} onClick={triggerRebound}>
                     {cw.charAt(0).toUpperCase() + cw.slice(1)}
                   </ClayButton>
                 ))}
               </div>
-              <div style={{ display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
                 <ClayButton colorway="mint" icon={<Icons.Search />} iconPosition="leading">Search</ClayButton>
                 <ClayButton colorway="blue" icon={<Icons.Bell />} iconPosition="trailing">Notify</ClayButton>
                 <ClayRebound trigger={reboundTrigger}>
@@ -603,55 +564,28 @@ const ShowcaseContent: React.FC = () => {
             </div>
           </ScrollReveal>
 
-          {/* Data Viz */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.25}>
-            <div>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Data Visualization
-              </h3>
+          {/* ── Chart ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.2}>
+            <div style={{ marginBottom: 48 }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Data visualization</p>
               <ClayCard colorway="neutral">
-                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', height: 240, gap: 24, padding: '0 16px' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-around', height: 220, gap: 20, padding: '0 12px' }}>
                   {chartData.map((bar, i) => (
                     <ClayChartBar key={bar.label} value={bar.value} label={bar.label} colorway={bar.colorway} delay={i * 200} />
                   ))}
                 </div>
               </ClayCard>
-              <div style={{ marginTop: 24 }}>
-                <ClaySlider value={sliderValue} onChange={(v) => { audio.slide(sliderValue, v); setSliderValue(v); }} colorway="mint" showTicks label="Adjust projection" />
+              <div style={{ marginTop: 20 }}>
+                <ClaySlider value={sliderValue} onChange={v => { audio.slide?.(sliderValue, v); setSliderValue(v); }} colorway="mint" showTicks label="Adjust projection" />
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Tooltip Showcase */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.1}>
+          {/* ── Segmented ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.22}>
             <div style={{ marginBottom: 48 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Tooltips
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 16, alignItems: 'center' }}>
-                <ClayTooltip content="Top tooltip" position="top">
-                  <ClayButton colorway="mint" size="sm">Hover Top</ClayButton>
-                </ClayTooltip>
-                <ClayTooltip content="Bottom tooltip" position="bottom">
-                  <ClayButton colorway="blue" size="sm">Hover Bottom</ClayButton>
-                </ClayTooltip>
-                <ClayTooltip content="Left tooltip" position="left">
-                  <ClayButton colorway="lavender" size="sm">Hover Left</ClayButton>
-                </ClayTooltip>
-                <ClayTooltip content="Right tooltip" position="right">
-                  <ClayButton colorway="peach" size="sm">Hover Right</ClayButton>
-                </ClayTooltip>
-              </div>
-            </div>
-          </ScrollReveal>
-
-          {/* Segmented Control Showcase */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.15}>
-            <div style={{ marginBottom: 48 }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Segmented Control
-              </h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 24, alignItems: 'center' }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Segmented control</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 20, alignItems: 'center' }}>
                 <ClaySegmentedControl
                   options={[
                     { value: 'design', label: 'Design' },
@@ -659,35 +593,49 @@ const ShowcaseContent: React.FC = () => {
                     { value: 'docs', label: 'Docs' },
                   ]}
                   value={segmentValue}
-                  onChange={(v) => { audio.pop(); setSegmentValue(v); }}
+                  onChange={v => { audio.pop?.(); setSegmentValue(v); }}
                   colorway="mint"
                 />
                 <p style={{ fontSize: 14, color: 'var(--text-secondary)' }}>
-                  Selected: <strong style={{ color: 'var(--text-primary)' }}>{segmentValue}</strong>
+                  Active: <strong style={{ color: 'var(--text-primary)' }}>{segmentValue}</strong>
                 </p>
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Skeleton Showcase */}
-          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.2}>
+          {/* ── Tooltips ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.24}>
+            <div style={{ marginBottom: 48 }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Tooltips</p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+                {(['top', 'bottom', 'left', 'right'] as const).map((pos, i) => (
+                  <ClayTooltip key={pos} content={`${pos.charAt(0).toUpperCase() + pos.slice(1)} tooltip`} position={pos}>
+                    <ClayButton colorway={(['mint', 'blue', 'lavender', 'peach'] as const)[i]} size="sm">
+                      {pos.charAt(0).toUpperCase() + pos.slice(1)}
+                    </ClayButton>
+                  </ClayTooltip>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* ── Skeleton ─── */}
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.26}>
             <div>
-              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>
-                Skeleton Loading
-              </h3>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
+              <p style={{ fontSize: 'var(--type-label-size)', fontWeight: 700, letterSpacing: '0.10em', textTransform: 'uppercase', color: 'var(--text-tertiary)', marginBottom: 14 }}>Skeleton loading</p>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: 20 }}>
                 <ClayCard colorway="neutral">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 14 }}>
                     <ClaySkeleton variant="circular" width={40} height={40} animation="pulse" />
                     <div style={{ flex: 1 }}>
                       <ClaySkeleton variant="text" width="60%" animation="pulse" />
                       <ClaySkeleton variant="text" width="40%" animation="pulse" />
                     </div>
                   </div>
-                  <ClaySkeleton variant="rounded" height={80} animation="wave" />
+                  <ClaySkeleton variant="rounded" height={72} animation="wave" />
                 </ClayCard>
                 <ClayCard colorway="neutral">
-                  <ClaySkeleton variant="rectangular" height={120} animation="pulse" />
+                  <ClaySkeleton variant="rectangular" height={110} animation="pulse" />
                   <div style={{ marginTop: 12 }}>
                     <ClaySkeleton variant="text" width="80%" animation="wave" />
                     <ClaySkeleton variant="text" width="50%" animation="wave" />
@@ -698,47 +646,60 @@ const ShowcaseContent: React.FC = () => {
           </ScrollReveal>
         </section>
 
-        {/* FOR TEAMS */}
-        <section id="teams" style={{ padding: '80px 24px' }}>
+        {/* ════ GAME ══════════════════════════════════════════════════════ */}
+        <section id="game" style={sectionPad}>
           <ScrollReveal reducedMotion={prefersReducedMotion}>
-            <SectionHeading reducedMotion={prefersReducedMotion}
-              title="Built for every team"
-              subtitle="Whether you are a designer sketching in Figma or a developer shipping to production, Mochi UI fits your workflow."
+            <SectionHeading
+              reducedMotion={prefersReducedMotion}
+              label="Interactive playground"
+              title="Mochi Bounce"
+              subtitle="The design system in play form. Drag the squircle blob, fling it upward, collect stars and chain peg bounces. Built entirely with the same tokens and shape language as the components above."
             />
           </ScrollReveal>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
+          <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.1}>
+            <MochiBounce />
+          </ScrollReveal>
+        </section>
+
+        {/* ════ TEAMS ═════════════════════════════════════════════════════ */}
+        <section id="teams" style={sectionPad}>
+          <ScrollReveal reducedMotion={prefersReducedMotion}>
+            <SectionHeading
+              reducedMotion={prefersReducedMotion}
+              label="Made for every team"
+              title="Built for designers and developers alike"
+              subtitle="Whether you're sketching in Figma or shipping to production, Mochi UI fits your workflow."
+            />
+          </ScrollReveal>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
             <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.1}>
               <ClayCard colorway="blue">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                    <Icons.Figma />
-                  </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700 }}>For Designers</h3>
+                  <div style={iconBox('var(--mochi-sky-blue)')}><Icons.Figma /></div>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em' }}>For Designers</h3>
                 </div>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>
+                <ul style={{ padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {[
                     'Figma variable library with 1:1 token mapping',
                     'Auto-layout components that mirror React props',
                     'Dark mode preview baked into every frame',
-                    'Accessibility annotations for WCAG compliance',
+                    'A11y annotations for WCAG compliance',
                   ].map(item => (
                     <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                      <span style={{ color: 'var(--mochi-mint-vivid)', fontWeight: 800, flexShrink: 0 }}>✓</span>
                       {item}
                     </li>
                   ))}
                 </ul>
               </ClayCard>
             </ScrollReveal>
-            <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.2}>
+            <ScrollReveal reducedMotion={prefersReducedMotion} delay={0.18}>
               <ClayCard colorway="mint">
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}>
-                    <Icons.Code />
-                  </div>
-                  <h3 style={{ fontSize: 18, fontWeight: 700 }}>For Developers</h3>
+                  <div style={iconBox('var(--mochi-mint-vivid)')}><Icons.Code /></div>
+                  <h3 style={{ fontSize: 18, fontWeight: 800, letterSpacing: '-0.02em' }}>For Developers</h3>
                 </div>
-                <ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>
+                <ul style={{ padding: 0, listStyle: 'none', display: 'flex', flexDirection: 'column', gap: 10 }}>
                   {[
                     'Tree-shakeable ESM exports with zero runtime overhead',
                     'TypeScript-native with strict prop inference',
@@ -746,7 +707,7 @@ const ShowcaseContent: React.FC = () => {
                     'SSR-friendly with Astro, Next.js, and Remix',
                   ].map(item => (
                     <li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}>
-                      <span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                      <span style={{ color: 'var(--mochi-mint-vivid)', fontWeight: 800, flexShrink: 0 }}>✓</span>
                       {item}
                     </li>
                   ))}
@@ -756,59 +717,60 @@ const ShowcaseContent: React.FC = () => {
           </div>
         </section>
 
-        {/* GET STARTED */}
-        <section id="start" style={{ padding: '80px 24px' }}>
+        {/* ════ GET STARTED ═══════════════════════════════════════════════ */}
+        <section id="start" style={sectionPad}>
           <ScrollReveal reducedMotion={prefersReducedMotion}>
             <div style={{
-              maxWidth: 640,
-              margin: '0 auto',
-              textAlign: 'center',
-              padding: '64px 32px',
-              borderRadius: 28,
+              maxWidth: 640, margin: '0 auto', textAlign: 'center',
+              padding: 'var(--space-16) var(--space-8)',
+              borderRadius: 'var(--radius-squircle-xl)',
               background: 'var(--bg-card)',
               boxShadow: 'var(--shadow-clay)',
             }}>
-              <h2 style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>
+              <SectionLabel>Get started in 30 seconds</SectionLabel>
+              <h2 style={{
+                fontSize: 'var(--type-title-size)',
+                fontWeight: 900, letterSpacing: 'var(--type-title-tracking)',
+                marginBottom: 12, color: 'var(--text-primary)',
+              }}>
                 Ready to build something soft?
               </h2>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>
-                Install Mochi UI in seconds and start building claymorphic interfaces 
-                with spring physics, haptic feedback, and accessible components.
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 'var(--type-body-line)' }}>
+                Install Mochi UI and start building claymorphic interfaces with spring physics, haptic feedback, and accessible components.
               </p>
+
+              {/* Install command */}
               <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
+                display: 'flex', alignItems: 'center', gap: 12,
                 padding: '14px 20px',
-                borderRadius: 16,
-                background: 'var(--bg-surface)',
-                boxShadow: 'inset 3px 3px 6px rgba(0,0,0,0.06), inset -3px -3px 6px rgba(255,255,255,0.8)',
-                fontFamily: 'monospace',
-                fontSize: 14,
-                color: 'var(--text-primary)',
-                marginBottom: 32,
-                textAlign: 'left',
+                borderRadius: 'var(--radius-squircle-sm)',
+                background: 'var(--bg-inset)',
+                boxShadow: 'inset 3px 3px 8px rgba(0,0,0,0.06), inset -3px -3px 8px rgba(255,255,255,0.8)',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 14, color: 'var(--text-primary)',
+                marginBottom: 28, textAlign: 'left',
                 justifyContent: 'space-between',
               }}>
                 <code>npm install @mochi-ui/react</code>
-                <button
-                  onClick={() => { navigator.clipboard.writeText('npm install @mochi-ui/react'); audio.success(); }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    cursor: 'pointer',
-                    color: 'var(--text-secondary)',
-                    fontSize: 13,
-                  }}
+                <motion.button
+                  onClick={copyInstall}
+                  whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: copied ? 'var(--mochi-mint-vivid)' : 'var(--text-tertiary)', transition: 'color 0.2s' }}
+                  aria-label="Copy install command"
                 >
-                  Copy
-                </button>
+                  <AnimatePresence mode="wait">
+                    <motion.span key={copied ? 'check' : 'copy'} initial={{ scale: 0.7, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.7, opacity: 0 }} transition={{ duration: 0.15 }}>
+                      {copied ? '✓' : <Icons.Copy />}
+                    </motion.span>
+                  </AnimatePresence>
+                </motion.button>
               </div>
-              <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>
+
+              <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
+                <ClayButton colorway="mint" size="lg" onClick={() => window.open('https://github.com/qt314wink/mochi-ui', '_blank')} icon={<Icons.GitHub />} iconPosition="leading">
                   Get Started
                 </ClayButton>
-                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); setShowModal(true); }}>
+                <ClayButton colorway="neutral" size="lg" onClick={() => setShowModal(true)}>
                   Read Docs
                 </ClayButton>
               </div>
@@ -816,60 +778,58 @@ const ShowcaseContent: React.FC = () => {
           </ScrollReveal>
         </section>
 
-        <ClayModal
-          isOpen={showModal}
-          onClose={() => { audio.pop(); setShowModal(false); }}
-          title="Coming Soon"
-          size="md"
-        >
+        <ClayModal isOpen={showModal} onClose={() => { audio.pop?.(); setShowModal(false); }} title="Documentation" size="md">
           <div style={{ padding: 24 }}>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>
-              Full documentation is currently in development. For now, explore the 
-              component source code on GitHub or inspect the examples on this page.
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 24, lineHeight: 'var(--type-body-line)' }}>
+              Full documentation is in development. Explore the component source code on GitHub or inspect the live examples on this page.
             </p>
-            <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
-              <ClayButton colorway="neutral" onClick={() => { audio.pop(); setShowModal(false); }}>Close</ClayButton>
-              <ClayButton colorway="mint" onClick={() => { audio.success(); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>View GitHub</ClayButton>
+            <div style={{ display: 'flex', gap: 10, justifyContent: 'flex-end' }}>
+              <ClayButton colorway="neutral" onClick={() => { audio.pop?.(); setShowModal(false); }}>Close</ClayButton>
+              <ClayButton colorway="mint" onClick={() => window.open('https://github.com/qt314wink/mochi-ui', '_blank')}>View GitHub</ClayButton>
             </div>
           </div>
         </ClayModal>
       </main>
 
-      {/* FOOTER */}
+      {/* ════ FOOTER ════════════════════════════════════════════════════ */}
       <footer style={{
-        marginTop: 64,
         padding: '48px 24px 32px',
-        borderTop: '1px solid rgba(0,0,0,0.05)',
+        borderTop: '1px solid var(--border-subtle)',
         textAlign: 'center',
-        color: 'var(--text-secondary)',
-        fontSize: 14,
+        color: 'var(--text-tertiary)',
+        fontSize: 13,
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 24 }}>
-            <a href="#hero" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Home</a>
-            <a href="#about" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>About</a>
-            <a href="#features" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Features</a>
-            <a href="#components" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>Components</a>
-            <a href="https://github.com/qt314wink/mochi-ui" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>GitHub</a>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: 20, flexWrap: 'wrap', marginBottom: 20 }}>
+            {['Home', 'About', 'Features', 'Components', 'Play', 'GitHub'].map(link => (
+              <a
+                key={link}
+                href={link === 'GitHub' ? 'https://github.com/qt314wink/mochi-ui' : `#${link.toLowerCase()}`}
+                target={link === 'GitHub' ? '_blank' : undefined}
+                rel={link === 'GitHub' ? 'noopener noreferrer' : undefined}
+                style={{ color: 'var(--text-tertiary)', textDecoration: 'none', fontWeight: 500, fontSize: 13 }}
+              >
+                {link}
+              </a>
+            ))}
           </div>
-          <p style={{ marginBottom: 8 }}>
-            Mochi UI — A claymorphism design system built with Astro, React, and Motion.
-          </p>
-          <p style={{ fontSize: 12, opacity: 0.7 }}>
-            © {new Date().getFullYear()} Mochi UI. Open source under MIT License.
-          </p>
+          <p style={{ marginBottom: 6, fontSize: 13 }}>Mochi UI — A claymorphism design system built with Astro, React, and Motion.</p>
+          <p style={{ fontSize: 11, opacity: 0.6 }}>© {new Date().getFullYear()} Mochi UI. Open source under MIT License.</p>
         </div>
       </footer>
     </div>
   );
 };
 
+// ─── Root component ───────────────────────────────────────────────────────────
 const EnhancedShowcasePage: React.FC = () => {
   const { prefersReducedMotion } = useResponsive();
+  const [loaded, setLoaded] = useState(false);
   return (
     <AudioProvider>
       <SmoothScrollProvider>
-        <ErrorBoundary fallback={<div style={{ position: 'fixed', inset: 0, zIndex: 0, opacity: 0.5, background: 'linear-gradient(135deg, rgb(220, 235, 250) 0%, rgb(240, 230, 245) 50%, rgb(230, 245, 235) 100%)' }} />}>
+        {!loaded && <MochiLoader onDone={() => setLoaded(true)} />}
+        <ErrorBoundary fallback={<div style={{ position: 'fixed', inset: 0, zIndex: 0, opacity: 0.5, background: 'linear-gradient(135deg, #DCEBfA 0%, #F0E6F5 50%, #E6F5EB 100%)' }} />}>
           <AtmosphereCanvas reducedMotion={prefersReducedMotion} />
         </ErrorBoundary>
         <ShowcaseContent />

@@ -1,110 +1,145 @@
 /* Mochi UI Design Tokens - CSS Custom Properties */
-/* Generated from W3C Design Tokens Format */
+/* v3 — Squircle-first, bold hierarchy, springy */
 
 :root {
-  /* === COLORS === */
-  /* Rainbow */
-  --mochi-mint: #A3E635;
+  /* === BRAND COLORS === */
+  --mochi-mint: #3DD68C;
+  --mochi-mint-vivid: #22C55E;
   --mochi-baby-blue: #7DD3FC;
   --mochi-lavender: #C084FC;
+  --mochi-lavender-vivid: #A855F7;
   --mochi-peach: #FB923C;
-
-  /* Pink & Red */
   --mochi-blush-pink: #FDA4AF;
   --mochi-soft-rose: #FB7185;
-
-  /* Blue */
   --mochi-powder-blue: #BAE6FD;
   --mochi-sky-blue: #38BDF8;
-
-  /* Green */
   --mochi-sage: #86EFAC;
   --mochi-mint-green: #4ADE80;
-
-  /* Neutrals */
   --mochi-ivory: #FEF3C7;
   --mochi-soft-taupe: #D6D3D1;
-  --mochi-warm-beige: #F5E6D3;
+  --mochi-warm-beige: #FAF7F4;
 
-  /* Dark Mode - NEVER pure black */
-  --mochi-dark-elevated: #1E1E2E;
-  --mochi-dark-surface: #2D2D44;
-  --mochi-dark-card: #252538;
+  /* Dark mode surfaces — NEVER pure black */
+  --mochi-dark-elevated: #16162A;
+  --mochi-dark-surface: #1E1E36;
+  --mochi-dark-card: #252542;
 
-  /* === SHADOW MATRIX (4-Layer System) === */
-  /* Layer 2: Lift - Floating depth */
-  --shadow-lift-sm: 0 4px 8px rgba(0,0,0,0.1);
-  --shadow-lift-md: 0 8px 16px rgba(0,0,0,0.1);
-  --shadow-lift-lg: 0 20px 40px rgba(0,0,0,0.1);
-
-  /* Layer 3: Volume - 3D inflation */
-  --shadow-volume: inset -10px -10px 20px rgba(0,0,0,0.05);
-
-  /* Layer 4: Reflection - Light source */
-  --shadow-reflection: inset 10px 10px 20px rgba(255,255,255,0.8);
-
-  /* Combined Clay Shadow */
-  --shadow-clay: 
+  /* === SHADOW MATRIX === */
+  --shadow-lift-sm: 0 4px 12px rgba(0,0,0,0.08);
+  --shadow-lift-md: 0 8px 24px rgba(0,0,0,0.10);
+  --shadow-lift-lg: 0 20px 60px rgba(0,0,0,0.13);
+  --shadow-volume: inset -8px -8px 16px rgba(0,0,0,0.04);
+  --shadow-reflection: inset 8px 8px 16px rgba(255,255,255,0.75);
+  --shadow-clay:
     var(--shadow-lift-md),
     var(--shadow-volume),
     var(--shadow-reflection);
-
-  /* Pressed/Active State */
   --shadow-pressed:
-    inset 0 4px 8px rgba(0,0,0,0.1),
+    inset 0 4px 10px rgba(0,0,0,0.12),
     var(--shadow-volume);
+  --shadow-glow-mint: 0 0 32px rgba(61,214,140,0.28);
+  --shadow-glow-lavender: 0 0 32px rgba(192,132,252,0.28);
 
-  /* === GEOMETRY === */
-  --radius-clay: 50%;
-  --radius-bento: 24px;
+  /* === SQUIRCLE GEOMETRY (superellipse n≈4.6) === */
+  /* All radii here represent visual equivalence, actual SVG clip-path used in components */
+  --radius-squircle-xs:  12px;
+  --radius-squircle-sm:  18px;
+  --radius-squircle-md:  26px;
+  --radius-squircle-lg:  36px;
+  --radius-squircle-xl:  48px;
+  --radius-squircle-hero: 64px;
   --radius-pill: 9999px;
-  --radius-button: 20px;
-  --radius-card: 28px;
-  --radius-input: 16px;
 
-  /* === SPACING === */
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
-  --space-xxl: 48px;
+  /* Legacy aliases — DO NOT add new ones */
+  --radius-clay:   var(--radius-squircle-xl);
+  --radius-bento:  var(--radius-squircle-lg);
+  --radius-button: var(--radius-squircle-sm);
+  --radius-card:   var(--radius-squircle-lg);
+  --radius-input:  var(--radius-squircle-sm);
 
-  /* === MOTION === */
-  --spring-bounce: 0.4;
-  --spring-duration: 300ms;
+  /* === SPACING — 8px grid === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+
+  /* === MOTION — spring-first === */
+  --spring-bounce: 0.45;
+  --spring-duration: 320ms;
   --ease-clay: cubic-bezier(0.34, 1.56, 0.64, 1);
   --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
   --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
 
-  /* === TYPOGRAPHY === */
+  /* === TYPOGRAPHY — 5-role scale only === */
   --font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-heading-size: 32px;
-  --font-heading-weight: 700;
-  --font-heading-line: 1.2;
-  --font-body-size: 16px;
-  --font-body-weight: 400;
-  --font-body-line: 1.5;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /* Display: Hero headlines */
+  --type-display-size: clamp(2.75rem, 6vw, 5rem);
+  --type-display-weight: 900;
+  --type-display-line: 1.05;
+  --type-display-tracking: -0.03em;
+
+  /* Title: Section heads */
+  --type-title-size: clamp(1.6rem, 3.2vw, 2.4rem);
+  --type-title-weight: 800;
+  --type-title-line: 1.15;
+  --type-title-tracking: -0.02em;
+
+  /* Label: Section labels, nav, uppercase tags */
+  --type-label-size: 11px;
+  --type-label-weight: 700;
+  --type-label-tracking: 0.10em;
+  --type-label-transform: uppercase;
+
+  /* Body: Paragraphs */
+  --type-body-size: 16px;
+  --type-body-weight: 400;
+  --type-body-line: 1.65;
+
+  /* Meta: Captions, timestamps, badges */
+  --type-meta-size: 12px;
+  --type-meta-weight: 500;
+  --type-meta-line: 1.4;
 }
 
-/* Dark Mode */
+/* === LIGHT THEME === */
+[data-theme="light"],
+:root:not([data-theme="dark"]) {
+  --bg-base: #FAF8F5;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-inset: #F4F0EB;
+  --text-primary: #1A1A2E;
+  --text-secondary: #5A5A78;
+  --text-tertiary: #9898B0;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-strong: rgba(0,0,0,0.14);
+  --bg-surface-rgb: 255, 248, 245;
+}
+
+/* === DARK THEME === */
 [data-theme="dark"] {
   --bg-base: var(--mochi-dark-elevated);
   --bg-surface: var(--mochi-dark-surface);
   --bg-card: var(--mochi-dark-card);
-  --text-primary: #E8E8F0;
-  --text-secondary: #A0A0B8;
-
-  /* Adjusted shadows for dark */
-  --shadow-lift-md: 0 8px 16px rgba(0,0,0,0.3);
-  --shadow-volume: inset -10px -10px 20px rgba(0,0,0,0.2);
-  --shadow-reflection: inset 10px 10px 20px rgba(255,255,255,0.05);
-}
-
-[data-theme="light"] {
-  --bg-base: var(--mochi-warm-beige);
-  --bg-surface: #FFF8F0;
-  --bg-card: #FFFFFF;
-  --text-primary: #2D2D44;
-  --text-secondary: #6B6B8B;
+  --bg-inset: #121226;
+  --text-primary: #EBEBF5;
+  --text-secondary: #9090B0;
+  --text-tertiary: #606080;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-strong: rgba(255,255,255,0.12);
+  --bg-surface-rgb: 30, 30, 54;
+  --shadow-lift-md: 0 8px 24px rgba(0,0,0,0.35);
+  --shadow-volume: inset -8px -8px 16px rgba(0,0,0,0.22);
+  --shadow-reflection: inset 8px 8px 16px rgba(255,255,255,0.04);
 }
