@@ -1,7 +1,9 @@
 name: Release
 
 on:
-  workflow_dispatch:
+  push:
+    branches:
+      - main
 
 permissions:
   contents: write
@@ -24,22 +26,21 @@ jobs:
 
       - name: Create lib package.json
         run: |
-          cat > lib-package.json << 'EOF'
+          cat > dist/package.json << 'EOF'
           {
             "name": "@mochiui/react",
             "version": "0.1.0",
             "description": "A multi-sensory claymorphism design system with 3D shaders, spatial audio, spring physics, and Figma compatibility",
             "type": "module",
-            "main": "./dist/index.cjs",
-            "module": "./dist/index.js",
-            "types": "./dist/index.d.ts",
+            "main": "./index.cjs",
+            "module": "./index.js",
+            "types": "./index.d.ts",
             "exports": {
               ".": {
-                "import": "./dist/index.js",
-                "require": "./dist/index.cjs",
-                "types": "./dist/index.d.ts"
-              },
-              "./styles": "./src/styles/tokens.css"
+                "import": "./index.js",
+                "require": "./index.cjs",
+                "types": "./index.d.ts"
+              }
             },
             "files": [
               "dist",
@@ -58,11 +59,9 @@ jobs:
             "license": "MIT"
           }
           EOF
-          cp lib-package.json dist-pkg.json
 
       - name: Publish to npm
         run: |
-          cp dist-pkg.json dist/package.json
           cp README.md dist/README.md
           cp LICENSE dist/LICENSE 2>/dev/null || true
           cd dist
