@@ -24,24 +24,23 @@ Every existing primitive receives the full token pass.
 - [x] `ClayChartBar` — token gradients, IntersectionObserver scroll trigger, hover tooltip, `role=img`
 - [x] `src/components/clay/index.ts` barrel export (16 components)
 - [x] `src/index.ts` package root barrel (13 primitives + 3 new + 3 motion + 3 hooks)
-- [x] GitHub Actions workflow (`generate-components.yml`) — auto-regenerate on token change
-- [x] `scripts/generate-tokens.js` — tokens.css → JSON / TS / SCSS / tokenMap
-- [x] `scripts/generate-components.js` — idempotent component codegen
+- [x] GitHub Actions workflow — auto-regenerate on token change
+- [x] `scripts/build-tokens.cjs` — tokens → Figma export (tokens-studio, figma-variables, component-specs, CSS)
 
 ---
 
-## Phase 1 — Motion Layer 🔄 IN PROGRESS
+## Phase 1 — Motion Layer ✅ COMPLETE
 
 - [x] `useCountUp` — scroll-triggered numeric animation, ease-out-expo
 - [x] `useReducedMotion` — central `prefers-reduced-motion` signal
 - [x] `CursorOrb` — desktop-only spring-lag glow, `data-cursor-color` reactive
 - [x] `SectionReveal` — blur + y-offset scroll fade-in
 - [x] `StaggerGrid` — per-child stagger with scale+blur
-- [ ] Add `data-cursor-color` attributes to hero CTA buttons, feature cards, testimonial cards in `EnhancedShowcasePage.tsx`
-- [ ] Wire `useCountUp` to stats section (48.2K users, 2847 components, 99.1% satisfaction)
-- [ ] Wire `SectionReveal` to every `<section>` in showcase page
-- [ ] Wire `StaggerGrid` to features grid and team cards
-- [ ] `MochiBounce` launch-trail particle component
+- [x] `MochiBounce` — launch-trail particle canvas, mouse-reactive, click burst
+- [x] `data-cursor-color` on all interactive elements in `EnhancedShowcasePage`
+- [x] `useCountUp` wired to stats section
+- [x] `SectionReveal` on every section
+- [x] `StaggerGrid` on features grid and team cards
 
 ---
 
@@ -53,18 +52,20 @@ Every existing primitive receives the full token pass.
 
 ---
 
-## Phase 3 — Theme System
+## Phase 3 — Theme System ✅ COMPLETE
 
-- [ ] `createMochiTheme(tokens)` — override any token at runtime
-- [ ] `MochiThemeProvider` — Context-based theme injection
-- [ ] Dark-mode class toggler with `localStorage` persistence
-- [ ] Figma token export script (`tokens.json` → Figma Tokens plugin format)
-- [ ] Contrast audit script — validate all colorway text against WCAG AA
+- [x] `createMochiTheme(tokens)` — override any token at runtime
+- [x] `MochiThemeProvider` — Context-based theme injection with `localStorage` persistence
+- [x] `DarkModeToggle` — accessible 44px button, `aria-pressed`, `aria-label`
+- [x] Dark-mode class toggler with `data-theme` attribute on `<html>`
+- [x] `src/components/theme/index.ts` barrel export
+- [ ] Figma contrast audit script — validate all colorway text against WCAG AA
 
 ---
 
 ## Phase 4 — Documentation Site
 
+- [x] GitHub Pages deploy workflow (Astro static build → `actions/deploy-pages`)
 - [ ] Storybook with clay theme
 - [ ] Per-component prop tables from TypeScript types
 - [ ] Live playground (editable props, live preview)
@@ -89,4 +90,4 @@ Every existing primitive receives the full token pass.
 2. **44px touch targets** — every interactive element (button, thumb, toggle, close icon) has `minHeight` or `minWidth` of 44px.
 3. **ARIA-complete** — every component ships with correct roles, labels, and keyboard event handlers by default, not as an afterthought.
 4. **Reduced-motion aware** — all animation routes through `useReducedMotion()` or the CSS `prefers-reduced-motion` block in `tokens.css`.
-5. **Idempotent codegen** — running `generate-components.js` twice produces bit-identical output.
+5. **Idempotent codegen** — running `build-tokens.cjs` twice produces bit-identical output.
