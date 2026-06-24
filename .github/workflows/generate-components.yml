@@ -1,8 +1,6 @@
 name: Generate Mochi UI Tokens & Components
 
-# ── TRIGGERS ─────────────────────────────────────────────────────────────────
 on:
-  # ▶ Click "Run workflow" in the Actions tab to trigger manually
   workflow_dispatch:
     inputs:
       branch:
@@ -14,7 +12,6 @@ on:
         required: false
         default: 'chore: auto-generate tokenized components'
 
-  # Auto-run when tokens or scripts change on main
   push:
     branches:
       - main
@@ -22,15 +19,17 @@ on:
       - 'scripts/**'
       - 'src/styles/tokens.css'
 
-# ── PERMISSIONS ───────────────────────────────────────────────────────────────
 permissions:
   contents: write
 
-# ── JOB ───────────────────────────────────────────────────────────────────────
 jobs:
   generate:
     name: Generate tokens and components
     runs-on: ubuntu-latest
+
+    env:
+      TARGET_BRANCH: ${{ github.event.inputs.branch || github.ref_name }}
+      COMMIT_MSG: ${{ github.event.inputs.commit_message || 'chore: auto-generate tokenized components [skip ci]' }}
 
     steps:
       - name: Checkout repository
@@ -55,7 +54,7 @@ jobs:
         run: node scripts/generate-components.js
 
       - name: TypeScript type-check
-        run: npx tsc --noEmit --skipLibCheck || echo "Type check warnings — not blocking commit"
+        run: npx tsc --noEmit --skipLibCheck || echo "Type check warnings - not blocking commit"
 
       - name: Commit and push generated files
         run: |
@@ -63,10 +62,8 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
           if git diff --staged --quiet; then
-            echo "Nothing changed — skipping commit."
+            echo "Nothing changed - skipping commit."
           else
-            BRANCH="${{ github.event.inputs.branch || github.ref_name }}"
-            MSG="${{ github.event.inputs.commit_message || 'chore: auto-generate tokenized components [skip ci]' }}"
-            git commit -m "$MSG"
-            git push origin "$BRANCH"
+            git commit -m "$COMMIT_MSG"
+            git push origin "$TARGET_BRANCH"
           fi
