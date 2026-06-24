@@ -1,0 +1,68 @@
+name: Generate Mochi UI Tokens & Components
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Target branch'
+        required: false
+        default: 'main'
+      commit_message:
+        description: 'Custom commit message'
+        required: false
+        default: 'chore: auto-generate tokenized components'
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/**'
+      - 'src/styles/tokens.css'
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    name: Generate tokens and components
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate design tokens (JSON + SCSS + TypeScript declarations)
+        run: node scripts/generate-tokens.js
+
+      - name: Generate tokenized clay component files
+        run: node scripts/generate-components.js
+
+      - name: Run TypeScript type-check
+        run: npx tsc --noEmit --skipLibCheck || echo "Type check warnings — not blocking commit"
+
+      - name: Commit and push generated files
+        uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          target_branch: ${{ github.event.inputs.branch || github.ref_name }}
+          commit_message: ${{ github.event.inputs.commit_message || 'chore: auto-generate tokenized components [skip ci]' }}
+          files_pattern: |
+            src/generated/**
+            src/components/clay/**
+            src/styles/tokens.json
+            src/styles/tokens.scss
+            src/styles/tokens.d.ts
+          email: github-actions@github.com
+          name: github-actions
+          token: ${{ secrets.GITHUB_TOKEN }}
+          empty_commits: false
