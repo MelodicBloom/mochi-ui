@@ -47,4 +47,4 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Design token pipeline (`scripts/build-tokens.cjs`) → Figma export
 - GitHub Actions: `tokenize.yml`, `deploy.yml`, `release.yml`
 - `tsup` dual ESM + CJS build with TypeScript declarations
-- GitHub Pages deploy (Astro static build)
+- GitHub Pages live at https://qt314wink.github.io/mochi-ui
