@@ -1,121 +1,92 @@
-# Mochi UI — Product Roadmap
+# Mochi UI — Component Library Roadmap
 
-> Last updated: June 2026
-> The canonical build pathway from open-source demo to productized design system platform.
-
----
-
-## Phase 0 — Foundation Integrity ✅ *In Progress*
-**Goal:** Zero token violations in all clay primitives. Every pixel from a token.
-
-### Milestone
-All 13 clay components pass a grep scan — no hardcoded `hsl()`, no raw `px` radii outside the squircle system, no raw color strings.
-
-### Deliverables
-- [x] `tokens.css` — squircle radius family, numeric space scale, glow shadows, semantic surfaces, responsive clamp vars
-- [x] `ClayButton` — tokenized colors, spacing, radius, ripple, 44px touch targets
-- [x] `ClayCard` — tokenized colors + radius, removed hardcoded `hsl()` map
-- [x] `ClayModal` — tokenized radius, padding, ARIA roles, 44px close button
-- [x] `ClaySkeleton` — tokenized radius per variant, `var(--bg-inset)` shimmer
-- [x] `ClayTooltip` — tokenized padding, font, radius, role="tooltip"
-- [ ] `ClaySlider` — 44px thumb touch target, tokenized track + fill
-- [ ] `ClayToggle` — 44px tap target minimum
-- [ ] `ClayInput` — `outline` focus ring (not box-shadow only)
-- [ ] `ClayBadge`, `ClayAvatar`, `ClayProgress`, `ClaySegmentedControl`, `ClayChartBar` — token pass
-- [ ] GitHub Actions workflow: auto-runs on push to `scripts/` or `tokens.css`
-- [ ] `MOCHI_ROADMAP.md` in repo ✓
-- [ ] `UI_AUDIT_CHECKLIST.md` in repo ✓
+> Last updated: 2026-06-24
 
 ---
 
-## Phase 1 — Motion Layer *2–3 weeks*
-**Goal:** Every interaction has a physics-justified response. The page feels like a living material.
+## Phase 0 — Token Foundation ✅ COMPLETE
 
-### Milestone
-Record a Loom of load-to-scroll. Every transition has a clear physical metaphor. Nothing is abrupt.
+Every existing primitive receives the full token pass.
 
-### Deliverables
-- [ ] `useCountUp` hook — numeric stat animation on scroll-enter, ease-out 1200ms
-- [ ] Gradient text keyframe loop — `background-position` shift on hero `Claymorphism` word
-- [ ] Section blur-in entry — `filter: blur(8px)→0` + `y: 32→0` combined with stagger
-- [ ] Feature grid stagger — `scale: 0.96→1` + `blur: 4→0` per card
-- [ ] Scroll-linked parallax — AtmosphereCanvas background at 0.3× scroll speed
-- [ ] Cursor orb — 32px glow follows pointer at 0.12 lerp, colorway-reactive on hover (desktop only)
-- [ ] MochiBounce launch trail — ring buffer of 6–8 ghost squircles with 80ms fade
-- [ ] `prefers-reduced-motion` — MochiLoader falls back to static wordmark
-
----
-
-## Phase 2 — Component Expansion *3–4 weeks*
-**Goal:** Complete the 30+ component count. Three new high-value additions.
-
-### New components
-- [ ] `ClayToast` / `ClayNotification` — spring-in from bottom-right (mobile) / top-right (desktop), stacked, auto-dismiss with progress bar
-- [ ] `ClayCommandPalette` — `⌘K` triggered, fuzzy search, keyboard nav, categorized results
-- [ ] `ClayDataTable` — sortable, paginated, spring-animated sort arrows, skeleton loading
-
-### Existing upgrades
-- [ ] `ClaySlider` — multi-thumb / range variant
-- [ ] `ClayAvatar` — group overlap variant + `+N` overflow badge
-- [ ] `ClayChartBar` — animated tooltip on hover using `ClayTooltip`
-
-### Milestone
-Public changelog page on site. First external contributor PR merged.
+- [x] `tokens.css` expanded: squircle radius family, 8px-grid space scale, glow shadows, semantic typography, semantic surfaces, `--border-subtle/strong`, mono font stack, `--ease-out-expo`
+- [x] `ClayButton` — token colorways, ripple, 44px min-height, `navigator.vibrate` safe
+- [x] `ClayCard` — token colorways, `borderRadius: inherit` shine overlay
+- [x] `ClayModal` — token radius/padding, `role=dialog`, `aria-modal`, `aria-labelledby`, 44px close button
+- [x] `ClaySkeleton` — token radii, theme-aware shimmer via `--bg-inset`
+- [x] `ClayTooltip` — token padding/font/radius, `role=tooltip`
+- [x] `ClaySlider` — token gradients, 44px thumb, `role=slider` + full ARIA
+- [x] `ClayToggle` — token colorways, `role=switch` + keyboard, 44px tap target
+- [x] `ClayInput` — outline focus ring (never clipped), `useId()` label association, `aria-invalid`, password toggle with `aria-label`
+- [x] `ClayBadge` — token colorways, dot prop, `role=button` + keyboard when onClick
+- [x] `ClayAvatar` — token status/fallback bg, `onError` image fallback, `role=img`
+- [x] `ClayProgress` — token gradient pairs, `role=progressbar` + ARIA, `scrollTrigger` prop
+- [x] `ClaySegmentedControl` — token active bg, `role=radiogroup`/`role=radio`, arrow-key nav, `fullWidth` prop
+- [x] `ClayChartBar` — token gradients, IntersectionObserver scroll trigger, hover tooltip, `role=img`
+- [x] `src/components/clay/index.ts` barrel export (16 components)
+- [x] `src/index.ts` package root barrel (13 primitives + 3 new + 3 motion + 3 hooks)
+- [x] GitHub Actions workflow (`generate-components.yml`) — auto-regenerate on token change
+- [x] `scripts/generate-tokens.js` — tokens.css → JSON / TS / SCSS / tokenMap
+- [x] `scripts/generate-components.js` — idempotent component codegen
 
 ---
 
-## Phase 3 — Productization *4–5 weeks*
-**Goal:** Mochi becomes something people cite, install, and recommend — not just use.
+## Phase 1 — Motion Layer 🔄 IN PROGRESS
 
-### Deliverables
-- [ ] Docs site (Astro + MDX) — Getting Started, Token Reference, Component API, Changelog
-- [ ] Figma library — published to Figma Community, variables match token names
-- [ ] `npm publish` — `@mochi-ui/react`, tree-shakeable ESM + CJS via tsup
-- [ ] VS Code extension scaffold — token autocomplete in CSS/SCSS
-- [ ] Landing page metrics bar — npm downloads, GitHub stars, Figma duplicates
-
-### Milestone
-First 100 npm weekly downloads. Featured in one design newsletter.
-
----
-
-## Phase 4 — Enterprise & Scale *6–8 weeks*
-**Goal:** Mochi can be adopted by teams building real products.
-
-### Deliverables
-- [ ] `createMochiTheme()` — generate custom token sheet from brand config
-- [ ] Playwright component tests — keyboard nav, ARIA, reduced-motion coverage
-- [ ] Performance audit — all bundle sizes documented, `ClayButton` < 3KB gzipped
-- [ ] Server Components compatibility audit — `'use client'` boundaries documented
-- [ ] `npx @mochi-ui/tokens export --format css|json|scss` CLI
-
-### Milestone
-One funded startup uses Mochi UI in production.
+- [x] `useCountUp` — scroll-triggered numeric animation, ease-out-expo
+- [x] `useReducedMotion` — central `prefers-reduced-motion` signal
+- [x] `CursorOrb` — desktop-only spring-lag glow, `data-cursor-color` reactive
+- [x] `SectionReveal` — blur + y-offset scroll fade-in
+- [x] `StaggerGrid` — per-child stagger with scale+blur
+- [ ] Add `data-cursor-color` attributes to hero CTA buttons, feature cards, testimonial cards in `EnhancedShowcasePage.tsx`
+- [ ] Wire `useCountUp` to stats section (48.2K users, 2847 components, 99.1% satisfaction)
+- [ ] Wire `SectionReveal` to every `<section>` in showcase page
+- [ ] Wire `StaggerGrid` to features grid and team cards
+- [ ] `MochiBounce` launch-trail particle component
 
 ---
 
-## Phase 5 — Monetization & Community *Ongoing*
-**Goal:** Sustainable revenue + contributor ecosystem.
+## Phase 2 — New Components ✅ COMPLETE
 
-### Offerings
-- Mochi Pro — $29/mo per seat (premium components, priority Figma updates, email support)
-- Team license — $99/mo for ≤10 devs
-- Agency license — $499/mo (white-label, unlimited client projects)
-- Mochi Studio — browser-based visual token editor (long-term flagship product)
+- [x] `ClayToast` + `useToast` — notification stack, auto-dismiss progress bar
+- [x] `ClayCommandPalette` — ⌘K, fuzzy search, category groups, full keyboard nav
+- [x] `ClayDataTable` — sortable + paginated + skeleton-loading, spring sort arrows
 
-### Community
-- Monthly "Clay drop" newsletter (new free component or effect)
-- Discord `#show-and-tell` channel
-- Open bounty program via OpenCollective ($25–$100 per merged `good-first-issue`)
+---
+
+## Phase 3 — Theme System
+
+- [ ] `createMochiTheme(tokens)` — override any token at runtime
+- [ ] `MochiThemeProvider` — Context-based theme injection
+- [ ] Dark-mode class toggler with `localStorage` persistence
+- [ ] Figma token export script (`tokens.json` → Figma Tokens plugin format)
+- [ ] Contrast audit script — validate all colorway text against WCAG AA
+
+---
+
+## Phase 4 — Documentation Site
+
+- [ ] Storybook with clay theme
+- [ ] Per-component prop tables from TypeScript types
+- [ ] Live playground (editable props, live preview)
+- [ ] Copy-to-clipboard code examples
+- [ ] Design token reference page
+
+---
+
+## Phase 5 — Package Release
+
+- [ ] `package.json` as `@mochi-ui/react`
+- [ ] ESM + CJS dual build via `tsup`
+- [ ] Peer deps: `react@>=18`, `motion/react@>=11`
+- [ ] Publish to npm
+- [ ] GitHub Releases tied to semver tags
 
 ---
 
 ## Architecture Invariants
 
-These rules apply at all phases and are never overridden:
-
-1. **Every pixel from a token.** No hardcoded colors, radii, or spacing in component files.
-2. **44px minimum touch target.** All interactive elements on mobile.
-3. **Reduced motion always degrades gracefully.** Static fallback exists for every animation.
-4. **WCAG 2.1 AA by default.** Contrast, keyboard nav, focus rings, and ARIA ship with the component — not as an option.
-5. **Token names are the API.** CSS variable names, TypeScript token keys, Figma variable names, and SCSS variable names are all derived from the same canonical `tokens.css` — no parallel naming systems.
+1. **Token-first** — no inline hardcoded color, radius, or spacing value survives a token pass. Everything resolves to a `var(--*)` token.
+2. **44px touch targets** — every interactive element (button, thumb, toggle, close icon) has `minHeight` or `minWidth` of 44px.
+3. **ARIA-complete** — every component ships with correct roles, labels, and keyboard event handlers by default, not as an afterthought.
+4. **Reduced-motion aware** — all animation routes through `useReducedMotion()` or the CSS `prefers-reduced-motion` block in `tokens.css`.
+5. **Idempotent codegen** — running `generate-components.js` twice produces bit-identical output.

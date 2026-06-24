@@ -6,79 +6,76 @@ export interface ClayBadgeProps {
   colorway?: 'mint' | 'blue' | 'pink' | 'lavender' | 'peach' | 'neutral';
   size?: 'sm' | 'md';
   pulse?: boolean;
+  dot?: boolean;
   onClick?: () => void;
 }
 
-const colorwayStyles = {
-  mint: { bg: 'hsl(142deg 76% 85%)', color: 'hsl(142deg 60% 30%)', border: 'hsl(142deg 76% 70%)' },
-  blue: { bg: 'hsl(200deg 90% 90%)', color: 'hsl(200deg 60% 35%)', border: 'hsl(200deg 90% 75%)' },
-  pink: { bg: 'hsl(350deg 90% 90%)', color: 'hsl(350deg 60% 40%)', border: 'hsl(350deg 90% 75%)' },
-  lavender: { bg: 'hsl(270deg 70% 90%)', color: 'hsl(270deg 50% 40%)', border: 'hsl(270deg 70% 75%)' },
-  peach: { bg: 'hsl(25deg 95% 85%)', color: 'hsl(25deg 70% 35%)', border: 'hsl(25deg 95% 70%)' },
-  neutral: { bg: 'hsl(30deg 20% 92%)', color: 'hsl(30deg 20% 35%)', border: 'hsl(30deg 20% 80%)' },
+// All token-resolved — no raw hsl()
+const colorwayTokens: Record<string, { bg: string; color: string; pulse: string }> = {
+  mint:     { bg: 'var(--mochi-mint-pale)',     color: 'var(--mochi-mint-vivid)',     pulse: 'var(--mochi-mint)' },
+  blue:     { bg: 'var(--mochi-baby-blue)',     color: 'var(--mochi-sky-blue)',       pulse: 'var(--mochi-sky-blue)' },
+  pink:     { bg: 'var(--mochi-blush-pink)',    color: 'var(--mochi-soft-rose)',      pulse: 'var(--mochi-soft-rose)' },
+  lavender: { bg: 'var(--mochi-lavender)',      color: 'var(--mochi-lavender-vivid)', pulse: 'var(--mochi-lavender-vivid)' },
+  peach:    { bg: 'var(--mochi-peach-pale)',    color: 'var(--mochi-peach)',          pulse: 'var(--mochi-peach)' },
+  neutral:  { bg: 'var(--bg-inset)',            color: 'var(--text-secondary)',       pulse: 'var(--border-strong)' },
 };
 
 const sizes = {
-  sm: { padding: '2px 10px', fontSize: 10 },
-  md: { padding: '4px 16px', fontSize: 12 },
+  sm: { padding: 'var(--space-1) var(--space-3)',  fontSize: 'var(--type-micro-size, 10px)' },
+  md: { padding: 'var(--space-1) var(--space-4)',  fontSize: 'var(--type-meta-size)' },
 };
 
 export const ClayBadge: React.FC<ClayBadgeProps> = ({
-  children,
-  colorway = 'mint',
-  size = 'md',
-  pulse = false,
-  onClick,
+  children, colorway = 'mint', size = 'md',
+  pulse = false, dot = false, onClick,
 }) => {
-  const colors = colorwayStyles[colorway];
-  const dims = sizes[size];
+  const tokens = colorwayTokens[colorway];
+  const dims   = sizes[size];
 
   return (
     <motion.span
-      className="clay-badge"
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); } : undefined}
       style={{
-        display: 'inline-flex',
-        alignItems: 'center',
-        gap: 4,
+        display: 'inline-flex', alignItems: 'center',
+        gap: dot ? 'var(--space-2)' : 'var(--space-1)',
         padding: dims.padding,
-        borderRadius: 999,
-        background: colors.bg,
-        color: colors.color,
+        borderRadius: 'var(--radius-pill)',
+        background: tokens.bg,
+        color: tokens.color,
         fontSize: dims.fontSize,
         fontWeight: 600,
-        letterSpacing: '0.02em',
+        fontFamily: 'var(--font-family)',
+        letterSpacing: 'var(--type-label-track)',
         textTransform: 'uppercase',
-        boxShadow: `
-          2px 2px 6px rgba(0,0,0,0.08),
-          inset -1px -1px 2px rgba(0,0,0,0.03),
-          inset 1px 1px 2px rgba(255,255,255,0.7)
-        `,
+        boxShadow: '2px 2px 6px rgba(0,0,0,0.08), inset -1px -1px 2px rgba(0,0,0,0.03), inset 1px 1px 2px rgba(255,255,255,0.7)',
         cursor: onClick ? 'pointer' : 'default',
-        position: 'relative',
-        overflow: 'hidden',
+        position: 'relative', overflow: 'hidden',
       }}
       onClick={onClick}
       whileHover={onClick ? { y: -2, scale: 1.05 } : undefined}
-      whileTap={onClick ? { scale: 0.95 } : undefined}
+      whileTap={onClick  ? { scale: 0.95 }        : undefined}
     >
-      {/* Pulse animation */}
+      {/* Live-activity dot */}
+      {dot && (
+        <span style={{
+          width: 6, height: 6, borderRadius: '50%',
+          background: tokens.pulse, flexShrink: 0,
+        }} />
+      )}
+
+      {/* Pulse halo */}
       {pulse && (
         <motion.span
+          aria-hidden="true"
           style={{
-            position: 'absolute',
-            inset: 0,
+            position: 'absolute', inset: 0,
             borderRadius: 'inherit',
-            background: colors.border,
+            background: tokens.pulse,
           }}
-          animate={{
-            scale: [1, 1.3, 1],
-            opacity: [0.3, 0, 0.3],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
+          animate={{ scale: [1, 1.3, 1], opacity: [0.3, 0, 0.3] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
         />
       )}
 
