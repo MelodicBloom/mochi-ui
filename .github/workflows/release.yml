@@ -1,43 +1,84 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  workflow_dispatch:
 
 permissions:
   contents: write
-  id-token: write
 
 jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Node 20
-        uses: actions/setup-node@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
 
-      - name: Install
-        run: npm install
+      - run: npm install
 
       - name: Build library
-        run: npm run build:lib
+        run: npx tsup src/lib/index.ts --format esm,cjs --dts --out-dir dist
+
+      - name: Create lib package.json
+        run: |
+          cat > lib-package.json << 'EOF'
+          {
+            "name": "@mochiui/react",
+            "version": "0.1.0",
+            "description": "A multi-sensory claymorphism design system with 3D shaders, spatial audio, spring physics, and Figma compatibility",
+            "type": "module",
+            "main": "./dist/index.cjs",
+            "module": "./dist/index.js",
+            "types": "./dist/index.d.ts",
+            "exports": {
+              ".": {
+                "import": "./dist/index.js",
+                "require": "./dist/index.cjs",
+                "types": "./dist/index.d.ts"
+              },
+              "./styles": "./src/styles/tokens.css"
+            },
+            "files": [
+              "dist",
+              "src/styles",
+              "README.md",
+              "LICENSE"
+            ],
+            "peerDependencies": {
+              "react": ">=18",
+              "react-dom": ">=18"
+            },
+            "repository": {
+              "type": "git",
+              "url": "git+https://github.com/qt314wink/mochi-ui.git"
+            },
+            "license": "MIT"
+          }
+          EOF
+          cp lib-package.json dist-pkg.json
 
       - name: Publish to npm
-        run: npm publish --access public
+        run: |
+          cp dist-pkg.json dist/package.json
+          cp README.md dist/README.md
+          cp LICENSE dist/LICENSE 2>/dev/null || true
+          cd dist
+          npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          generate_release_notes: true
+          tag_name: v0.1.0
+          name: v0.1.0
+          body: 'Initial release of @mochiui/react'
           files: |
             dist/index.js
             dist/index.cjs
             dist/index.d.ts
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
