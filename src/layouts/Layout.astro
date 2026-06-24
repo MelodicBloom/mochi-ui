@@ -1,59 +1,56 @@
 ---
+import '../styles/tokens.css';
+import '../styles/clay.css';
+import '../styles/animations.css';
+
 export interface Props {
-  title: string;
+  title?: string;
   description?: string;
+  ogImage?: string;
 }
 
-const { title, description = "Mochi UI is a claymorphism design system and React UI component library with spring physics, tactile feedback, and accessible design tokens. Built for modern product teams." } = Astro.props;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://mochi-ui-two.vercel.app');
+const {
+  title = 'Mochi UI — Claymorphism Design System',
+  description = 'Production-ready claymorphic React components with spring physics, magnetic cursor effects, and full accessibility.',
+  ogImage = '/og-image.png',
+} = Astro.props;
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content={description} />
-  <meta name="theme-color" content="#C8F6D8" />
-  <meta name="color-scheme" content="light dark" />
-  
-  <!-- Keywords -->
-  <meta name="keywords" content="claymorphism design system, React UI component library, spring physics UI, tactile design system, accessible UI components, Figma design tokens, modern UI framework, soft UI design system, interactive component library, neumorphism alternative, React UI kit, design system for product teams" />
-  
-  <!-- Open Graph -->
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content={title} />
-  <meta property="og:description" content={description} />
-  <meta property="og:url" content={canonicalURL} />
-  <meta property="og:site_name" content="Mochi UI" />
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={title} />
-  <meta name="twitter:description" content={description} />
-  
-  <!-- Canonical -->
-  <link rel="canonical" href={canonicalURL} />
-  
-  <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  
-  <title>{title}</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles/tokens.css" />
-  <link rel="stylesheet" href="/styles/clay.css" />
-  
-  <script is:inline>
-    (function() {
-      const theme = localStorage.getItem('theme') || 'light';
-      document.documentElement.setAttribute('data-theme', theme);
-    })();
-  </script>
-</head>
-<body>
-  <slot />
-</body>
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:url" content="https://mochi-ui-two.vercel.app" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{title}</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Prevent flash of wrong theme -->
+    <script is:inline>
+      (function () {
+        const stored = localStorage.getItem('mochi-theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = stored || (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+        if (theme === 'dark') document.documentElement.classList.add('dark');
+      })();
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
 </html>
