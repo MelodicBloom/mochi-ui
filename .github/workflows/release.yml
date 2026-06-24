@@ -22,9 +22,9 @@ jobs:
       - run: npm install
 
       - name: Build library
-        run: npx tsup src/lib/index.ts --format esm,cjs --dts --out-dir dist
+        run: npx tsup src/components/index.ts --format esm,cjs --dts --out-dir dist
 
-      - name: Create lib package.json
+      - name: Write publish package.json
         run: |
           cat > dist/package.json << 'EOF'
           {
@@ -37,17 +37,11 @@ jobs:
             "types": "./index.d.ts",
             "exports": {
               ".": {
+                "types": "./index.d.ts",
                 "import": "./index.js",
-                "require": "./index.cjs",
-                "types": "./index.d.ts"
+                "require": "./index.cjs"
               }
             },
-            "files": [
-              "dist",
-              "src/styles",
-              "README.md",
-              "LICENSE"
-            ],
             "peerDependencies": {
               "react": ">=18",
               "react-dom": ">=18"
