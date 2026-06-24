@@ -1,8 +1,35 @@
 # Mochi UI 🍡
 
-> A **Claymorphism Design System** built with Astro, React, and Motion — featuring spring physics, tactile haptic feedback, and Figma-native compatibility.
+> A **Claymorphism Design System** built with React and Motion — featuring spring physics, tactile haptic feedback, and Figma-native compatibility.
 
-![Mochi UI](public/assets/preview.png)
+[![npm version](https://img.shields.io/npm/v/@mochiui/react)](https://www.npmjs.com/package/@mochiui/react)
+[![npm downloads](https://img.shields.io/npm/dm/@mochiui/react)](https://www.npmjs.com/package/@mochiui/react)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
+## Install
+
+```bash
+npm install @mochiui/react
+```
+
+## Quick Start
+
+```tsx
+import { ClayButton, ClayCard, PhysicsProvider, physicsPresets } from '@mochiui/react';
+import '@mochiui/react/styles';
+
+export default function App() {
+  return (
+    <PhysicsProvider config={physicsPresets.clay}>
+      <ClayCard>
+        <ClayButton color="mint" size="md">
+          Hello Mochi
+        </ClayButton>
+      </ClayCard>
+    </PhysicsProvider>
+  );
+}
+```
 
 ## ✨ Philosophy
 
@@ -15,44 +42,7 @@ Mochi UI implements the complete tactile web playbook:
 - **Haptic Synchronization** — Device hardware feedback mapped to visual states
 - **Bento Grids** — Japanese bento-inspired compartmentalization
 
-## 🚀 Quick Start
-
-```bash
-# Clone and install
-npm install
-
-# Start dev server
-npm run dev
-
-# Build for production
-npm run build
-
-# Export design tokens to Figma
-npm run tokens
-```
-
-## 🎨 Design Tokens (W3C Format)
-
-All tokens follow the [W3C Design Tokens Format](https://design-tokens.github.io/format/) for universal compatibility:
-
-```json
-{
-  "mochi.color.rainbow.mint": { "$type": "color", "$value": "#A3E635" },
-  "mochi.shadow.lift.md": { "$type": "shadow", "$value": { ... } },
-  "mochi.motion.spring.bounce": { "$type": "number", "$value": 0.4 }
-}
-```
-
-### Figma Integration
-
-| Export Format | Use Case |
-|--------------|----------|
-| `tokens-studio.json` | [Tokens Studio](https://tokens.studio) plugin |
-| `figma-variables.json` | Native Figma Variables API |
-| `variables.css` | CSS custom properties import |
-| `component-specs.json` | Component anatomy documentation |
-
-## 🧱 Component Library
+## 🧱 Components
 
 ### Clay Primitives
 
@@ -66,62 +56,77 @@ All tokens follow the [W3C Design Tokens Format](https://design-tokens.github.io
 | `ClayChartBar` | 3D cylinder, volumetric shadow, tooltip | Grow from bottom |
 | `ClayBadge` | Pulse animation, micro-float | Scale bounce |
 | `ClayAvatar` | Status indicator, rotation on hover | Tilt + scale |
+| `ClayTooltip` | Spring entrance, arrow pointer | Scale + fade |
+| `ClayModal` | Backdrop blur, spring open/close | Scale overshoot |
+| `ClaySkeleton` | Shimmer animation | Pulse |
+| `ClayProgress` | Fill animation, milestone pops | Spring fill |
+| `ClaySegmentedControl` | Sliding indicator, haptic selection | Slide spring |
 
 ### Animation Systems
 
-| System | Purpose |
+| Export | Purpose |
 |--------|---------|
-| `SpringPhysics` | Bounce + Duration configuration |
-| `ClayRebound` | 3-phase animation (Compression → Overshoot → Settle) |
+| `PhysicsProvider` | Wrap your app to configure global spring physics |
+| `usePhysics` | Hook to read current physics config |
+| `physicsPresets` | 6 presets: `jelly`, `clay`, `firm`, `snappy`, `luxurious`, `bouncy` |
+| `ClayRebound` | 3-phase animation wrapper (Compression → Overshoot → Settle) |
 | `FloatingContainer` | Ambient breathing animation |
 | `FloatingGroup` | Staggered floating elements |
-| `ParallaxLayer` | Mouse-driven depth |
+| `ParallaxLayer` | Mouse-driven depth parallax |
+| `triggerHaptic` | Programmatic haptic feedback |
+
+### Layout
+
+| Export | Purpose |
+|--------|---------|
+| `BentoGrid` | Responsive bento-style grid container |
+| `BentoItem` | Individual bento cell with span control |
+| `BentoLayouts` | Preset layout configurations |
 
 ## 🎯 Physics Presets
 
 ```tsx
-import { physicsPresets, PhysicsProvider } from 'mochi-ui';
+import { physicsPresets, PhysicsProvider } from '@mochiui/react';
 
-// Available presets
 const presets = {
-  jelly:       { bounce: 0.8, duration: 500 },  // Maximum elasticity
-  clay:        { bounce: 0.4, duration: 300 },  // Standard (default)
-  firm:        { bounce: 0.15, duration: 200 }, // Minimal bounce
-  snappy:      { bounce: 0.2, duration: 150 },  // Quick response
-  luxurious:   { bounce: 0.5, duration: 600 },   // Slow elegance
-  bouncy:      { bounce: 0.9, duration: 400 },  // Playful
+  jelly:      { bounce: 0.8, duration: 500 },  // Maximum elasticity
+  clay:       { bounce: 0.4, duration: 300 },  // Standard (default)
+  firm:       { bounce: 0.15, duration: 200 }, // Minimal bounce
+  snappy:     { bounce: 0.2, duration: 150 },  // Quick response
+  luxurious:  { bounce: 0.5, duration: 600 },  // Slow elegance
+  bouncy:     { bounce: 0.9, duration: 400 },  // Playful
 };
 
-// Apply to entire app
 <PhysicsProvider config={physicsPresets.jelly}>
   <App />
 </PhysicsProvider>
 ```
 
-## 📐 Shadow Matrix
+## 📱 Haptic Feedback
 
-The 4-layer CSS shadow system creates physical depth:
+```tsx
+import { triggerHaptic } from '@mochiui/react';
+
+triggerHaptic({ enabled: true, intensity: 'soft' });   // Button press
+triggerHaptic({ enabled: true, intensity: 'medium' }); // Toggle
+triggerHaptic({ enabled: true, intensity: 'firm' });   // Deep press
+```
+
+## 📐 Shadow Matrix
 
 ```css
 .clay-surface {
-  /* Layer 1: Base color */
   background: hsl(120deg 35% 82%);
-
-  /* Layer 2: Lift — floating depth */
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-
-  /* Layer 3: Volume — 3D inflation */
-  box-shadow: inset -10px -10px 20px rgba(0,0,0,0.05);
-
-  /* Layer 4: Reflection — light source */
-  box-shadow: inset 10px 10px 20px rgba(255,255,255,0.8);
+  box-shadow:
+    0 8px 16px rgba(0,0,0,0.1),              /* Lift */
+    inset -10px -10px 20px rgba(0,0,0,0.05), /* Volume */
+    inset 10px 10px 20px rgba(255,255,255,0.8); /* Reflection */
 }
 ```
 
 ## 🌗 Dark Mode
 
 ```tsx
-// Never use pure black — always elevated darks
 document.documentElement.setAttribute('data-theme', 'dark');
 ```
 
@@ -130,61 +135,13 @@ document.documentElement.setAttribute('data-theme', 'dark');
 | Light | `#F5E6D3` | `#FFF8F0` | `#FFFFFF` |
 | Dark | `#1E1E2E` | `#2D2D44` | `#252538` |
 
-## 🎭 State Lifecycle
+## 🚀 Docs Site (local dev)
 
-Every interactive component follows the 3-state tactile lifecycle:
-
+```bash
+git clone https://github.com/qt314wink/mochi-ui
+npm install
+npm run dev
 ```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   DEFAULT   │ →  │    HOVER    │ →  │    ACTIVE   │
-│   Floating  │    │   Lifted    │    │  Compressed │
-│  (shadow↑)  │    │ (shadow↑↑)  │    │ (inset↓)    │
-└─────────────┘    └─────────────┘    └─────────────┘
-```
-
-## 📱 Haptic Feedback
-
-```tsx
-import { triggerHaptic } from 'mochi-ui';
-
-// Mapped to UI components
-triggerHaptic({ enabled: true, intensity: 'soft' });   // Button press
-triggerHaptic({ enabled: true, intensity: 'medium' });   // Toggle
-triggerHaptic({ enabled: true, intensity: 'firm' });    // Deep press
-```
-
-## 🏗️ Architecture
-
-```
-mochi-ui/
-├── src/
-│   ├── components/
-│   │   ├── clay/           # 8 primitive components
-│   │   ├── animations/     # Physics & motion systems
-│   │   ├── layout/         # BentoGrid, containers
-│   │   └── ShowcasePage.tsx # Interactive demo
-│   ├── styles/
-│   │   ├── tokens.css      # CSS custom properties
-│   │   └── clay.css        # Component styles
-│   ├── tokens/
-│   │   └── tokens.json     # W3C format tokens
-│   └── pages/
-│       └── index.astro     # Main entry
-├── figma-export/           # Generated Figma assets
-├── scripts/
-│   └── build-tokens.js     # Token transformation
-└── package.json
-```
-
-## 🎨 Color Palettes
-
-| Theme | Mood | Colors |
-|-------|------|--------|
-| Rainbow | Whimsical | Mint, Baby Blue, Lavender, Peach |
-| Pink & Red | Romantic | Blush Pink, Soft Rose |
-| Blue | Serene | Powder Blue, Sky Blue |
-| Green | Natural | Sage, Mint Green |
-| Neutrals | Sophisticated | Ivory, Soft Taupe |
 
 ## 📄 License
 

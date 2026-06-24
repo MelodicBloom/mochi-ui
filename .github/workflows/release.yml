@@ -1,7 +1,14 @@
 name: Release
 
 on:
+  push:
+    tags:
+      - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to publish (e.g. 0.2.0)'
+        required: true
 
 permissions:
   contents: write
@@ -19,16 +26,28 @@ jobs:
 
       - run: npm install
 
+      - name: Determine version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" = "push" ]; then
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+            echo "TAG=${GITHUB_REF_NAME}" >> $GITHUB_OUTPUT
+          else
+            echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+            echo "TAG=v${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build library
         run: npx tsup src/components/index.ts --format esm,cjs --dts --out-dir dist
 
       - name: Write publish package.json
         run: |
-          cat > dist/package.json << 'EOF'
+          VERSION=${{ steps.version.outputs.VERSION }}
+          cat > dist/package.json << EOF
           {
             "name": "@mochiui/react",
-            "version": "0.1.0",
-            "description": "A multi-sensory claymorphism design system with 3D shaders, spatial audio, spring physics, and Figma compatibility",
+            "version": "${VERSION}",
+            "description": "A multi-sensory claymorphism design system with spring physics, haptic feedback, and Figma compatibility",
             "type": "module",
             "main": "./index.cjs",
             "module": "./index.js",
@@ -40,6 +59,7 @@ jobs:
                 "require": "./index.cjs"
               }
             },
+            "keywords": ["claymorphism", "react", "design-system", "components", "animation", "spring-physics", "haptics", "bento", "ui", "css"],
             "peerDependencies": {
               "react": ">=18",
               "react-dom": ">=18"
@@ -48,6 +68,7 @@ jobs:
               "type": "git",
               "url": "git+https://github.com/qt314wink/mochi-ui.git"
             },
+            "homepage": "https://github.com/qt314wink/mochi-ui",
             "license": "MIT"
           }
           EOF
@@ -64,12 +85,13 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v0.1.0
-          name: v0.1.0
-          body: 'Initial release of @mochiui/react'
+          tag_name: ${{ steps.version.outputs.TAG }}
+          name: ${{ steps.version.outputs.TAG }}
+          body: 'Release ${{ steps.version.outputs.TAG }} of @mochiui/react'
           files: |
             dist/index.js
             dist/index.cjs
             dist/index.d.ts
+          make_latest: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
