@@ -47,7 +47,6 @@ export type { CommandItem, ClayCommandPaletteProps } from './clay/ClayCommandPal
 export { ClayDataTable }            from './clay/ClayDataTable';
 export type { TableColumn, ClayDataTableProps } from './clay/ClayDataTable';
 
-// ClayRebound — spring-squish wrapper
 export { ClayRebound }              from './clay/ClayRebound';
 export type { ClayReboundProps }    from './clay/ClayRebound';
 
@@ -67,6 +66,15 @@ export { CursorOrb }                from './motion/CursorOrb';
 export { SectionReveal }            from './motion/SectionReveal';
 export { StaggerGrid }              from './motion/StaggerGrid';
 export { MochiBounce }              from './motion/MochiBounce';
+export { ScrollReveal, SplitText, ParallaxLayer, ScrollProgressBar, TextRevealBlock } from './motion/ScrollTypography';
+
+// ── Hero ──────────────────────────────────────────────────────────────────────
+export { ClayHero3D }               from './hero/ClayHero3D';
+export type { ClayHero3DProps }     from './hero/ClayHero3D';
+
+// ── Playground ────────────────────────────────────────────────────────────────
+export { ClayPlayground }           from './playground/ClayPlayground';
+export { SpringGraph }              from './playground/SpringGraph';
 
 // ── Theme System ─────────────────────────────────────────────────────────────
 export { MochiThemeProvider, useMochiTheme, createMochiTheme } from './theme/MochiThemeProvider';
