@@ -36,6 +36,7 @@ import { AtmosphereCanvas } from './enhanced/effects/AtmosphereCanvas';
 import { useActiveSection } from '../hooks/useActiveSection';
 import { useResponsive } from './enhanced/responsive/ResponsiveSystem';
 import { ErrorBoundary } from './ErrorBoundary';
+import { ClayIcon, ClayIconRow, type ClayIconName } from './icons';
 
 const Icons = {
   Search: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>,
@@ -52,12 +53,13 @@ const Icons = {
   Figma: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 5.5A3.5 3.5 0 0 1 8.5 2H12v7H8.5A3.5 3.5 0 0 1 5 5.5z"/><path d="M12 2h3.5a3.5 3.5 0 1 1 0 7H12V2z"/><path d="M12 12.5a3.5 3.5 0 1 1 7 0 3.5 3.5 0 1 1-7 0z"/><path d="M5 19.5A3.5 3.5 0 0 1 8.5 23H12v-7H8.5A3.5 3.5 0 0 1 5 19.5z"/><path d="M5 12.5A3.5 3.5 0 0 1 8.5 9H12v7H8.5A3.5 3.5 0 0 1 5 12.5z"/></svg>,
   Accessibility: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>,
   Palette: () => <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.01 17.461 2 12 2z"/></svg>,
+  Download: () => <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>,
 };
 
-const sectionIds = ['hero', 'about', 'features', 'playground', 'components', 'teams', 'start'];
+const sectionIds = ['hero', 'about', 'features', 'playground', 'components', 'assets', 'teams', 'start'];
 const sectionLabels: Record<string, string> = {
   hero: 'Home', about: 'About', features: 'Features',
-  playground: 'Playground', components: 'Components', teams: 'Teams', start: 'Get Started',
+  playground: 'Playground', components: 'Components', assets: 'Assets', teams: 'Teams', start: 'Get Started',
 };
 
 const SectionHeading: React.FC<{ title: string; subtitle?: string; reducedMotion?: boolean }> = ({ title, subtitle, reducedMotion }) => {
@@ -76,6 +78,31 @@ const SectionHeading: React.FC<{ title: string; subtitle?: string; reducedMotion
     </div>
   );
 };
+
+// ── Component thumbnail data ──────────────────────────────────────────────────
+const THUMBNAILS = [
+  { file: 'thumb-button.svg', label: 'ClayButton',  colorway: 'mint'     },
+  { file: 'thumb-card.svg',   label: 'ClayCard',    colorway: 'blue'     },
+  { file: 'thumb-input.svg',  label: 'ClayInput',   colorway: 'lavender' },
+  { file: 'thumb-toggle.svg', label: 'ClayToggle',  colorway: 'pink'     },
+  { file: 'thumb-slider.svg', label: 'ClaySlider',  colorway: 'amber'    },
+  { file: 'thumb-avatar.svg', label: 'ClayAvatar',  colorway: 'lavender' },
+] as const;
+
+// ── Feature definitions (with ClayIcon names) ────────────────────────────────
+const FEATURES: Array<{
+  iconName: ClayIconName;
+  title: string;
+  desc: string;
+  color: string;
+}> = [
+  { iconName: 'sun',      title: 'Spring Physics',    desc: 'Mass-spring-damper physics power every animation. No cubic-bezier guessing.',              color: 'mint'     },
+  { iconName: 'chart',    title: '30+ Components',    desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.',             color: 'blue'     },
+  { iconName: 'calendar', title: 'Figma Compatible',  desc: 'Design tokens map 1:1 between Figma variables and CSS custom properties.',                  color: 'pink'     },
+  { iconName: 'bell',     title: 'A11y Built-In',     desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.',                 color: 'lavender' },
+  { iconName: 'copy',     title: 'TypeScript Native', desc: 'Fully typed props, strict inference, and IntelliSense-friendly APIs.',                       color: 'peach'    },
+  { iconName: 'moon',     title: 'Dark Mode',         desc: 'Automatic theme switching with CSS custom properties and localStorage persistence.',         color: 'neutral'  },
+];
 
 interface ShowcaseContentProps {
   physicsPreset: PhysicsPreset;
@@ -131,7 +158,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
     <div ref={containerRef} style={{ minHeight: '100vh', background: 'var(--bg-base)', transition: 'background 0.3s' }}>
       <ScrollProgressBar color="var(--mochi-mint)" />
 
-      {/* Header */}
+      {/* ── Header ─────────────────────────────────────────────────────────── */}
       <header style={{ position: 'sticky', top: 0, zIndex: 100, background: 'rgba(var(--bg-surface-rgb, 255,248,240),0.88)', backdropFilter: 'blur(20px) saturate(180%)', WebkitBackdropFilter: 'blur(20px) saturate(180%)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', padding: '16px 24px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -166,37 +193,57 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
         </nav>
       </header>
 
-      {/* HERO */}
+      {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section id="hero" style={{ padding: '0 24px 48px', position: 'relative', overflow: 'hidden' }}>
-        <ClayHero3D
-          headline={
-            <div>
-              <ClayBadge colorway="mint">v2.0 — Open Source</ClayBadge>
-              <div style={{ height: 18 }} />
-              <SplitText
-                as="h1"
-                text="Interfaces you can feel"
-                style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.08, color: 'var(--text-primary)', margin: 0 }}
-              />
-            </div>
-          }
-          subheadline={
-            <ParallaxLayer speed={0.18}>
-              <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', maxWidth: 520, lineHeight: 1.7, margin: '20px 0 28px' }}>
-                Mochi UI is a modern React component library built around claymorphism — soft, tactile interfaces with spring physics, haptic feedback, and accessible design tokens.
-              </p>
-            </ParallaxLayer>
-          }
-          cta={
-            <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
-              <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); scrollTo('playground'); }}>Open Playground</ClayButton>
-              <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>View on GitHub</ClayButton>
-            </div>
-          }
+        {/* Clay blob background */}
+        <img
+          src="/assets/hero-bg.svg"
+          alt=""
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            objectPosition: 'center top',
+            pointerEvents: 'none',
+            userSelect: 'none',
+            zIndex: 0,
+            opacity: 0.72,
+          }}
         />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <ClayHero3D
+            headline={
+              <div>
+                <ClayBadge colorway="mint">v2.0 — Open Source</ClayBadge>
+                <div style={{ height: 18 }} />
+                <SplitText
+                  as="h1"
+                  text="Interfaces you can feel"
+                  style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', fontWeight: 800, lineHeight: 1.08, color: 'var(--text-primary)', margin: 0 }}
+                />
+              </div>
+            }
+            subheadline={
+              <ParallaxLayer speed={0.18}>
+                <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', maxWidth: 520, lineHeight: 1.7, margin: '20px 0 28px' }}>
+                  Mochi UI is a modern React component library built around claymorphism — soft, tactile interfaces with spring physics, haptic feedback, and accessible design tokens.
+                </p>
+              </ParallaxLayer>
+            }
+            cta={
+              <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
+                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); scrollTo('playground'); }}>Open Playground</ClayButton>
+                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>View on GitHub</ClayButton>
+              </div>
+            }
+          />
+        </div>
       </section>
 
-      {/* TRUST BAR */}
+      {/* ── TRUST BAR ──────────────────────────────────────────────────────── */}
       <section style={{ padding: '28px 24px', borderTop: '1px solid rgba(0,0,0,0.05)', borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
           <p style={{ fontSize: 13, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 14 }}>Built for modern product teams with</p>
@@ -209,7 +256,8 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
       </section>
 
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px 48px' }}>
-        {/* ABOUT */}
+
+        {/* ── ABOUT ──────────────────────────────────────────────────────────── */}
         <section id="about" style={{ padding: '80px 0' }}>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 48, alignItems: 'center' }}>
             <ScrollReveal>
@@ -232,21 +280,18 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
           </div>
         </section>
 
-        {/* FEATURES */}
+        {/* ── FEATURES ───────────────────────────────────────────────────────── */}
         <section id="features" style={{ padding: '80px 0' }}>
-          <ScrollReveal><SectionHeading reducedMotion={prefersReducedMotion} title="Everything you need to ship faster" subtitle="Mochi UI combines a comprehensive component library with production-ready tooling for design systems, product teams, and indie developers." /></ScrollReveal>
+          <ScrollReveal>
+            <SectionHeading reducedMotion={prefersReducedMotion} title="Everything you need to ship faster" subtitle="Mochi UI combines a comprehensive component library with production-ready tooling for design systems, product teams, and indie developers." />
+          </ScrollReveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
-            {[
-              { icon: <Icons.Zap />, title: 'Spring Physics', desc: 'Mass-spring-damper physics power every animation. No cubic-bezier guessing.', color: 'mint' },
-              { icon: <Icons.Layers />, title: '30+ Components', desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.', color: 'blue' },
-              { icon: <Icons.Figma />, title: 'Figma Compatible', desc: 'Design tokens map 1:1 between Figma variables and CSS custom properties.', color: 'pink' },
-              { icon: <Icons.Accessibility />, title: 'A11y Built-In', desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.', color: 'lavender' },
-              { icon: <Icons.Code />, title: 'TypeScript Native', desc: 'Fully typed props, strict inference, and IntelliSense-friendly APIs.', color: 'peach' },
-              { icon: <Icons.Palette />, title: 'Dark Mode', desc: 'Automatic theme switching with CSS custom properties and localStorage persistence.', color: 'neutral' },
-            ].map((f, i) => (
+            {FEATURES.map((f, i) => (
               <ScrollReveal key={f.title} delay={i * 0.06}>
                 <ClayCard colorway={f.color as any} interactive={false}>
-                  <div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--bg-base)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 12, boxShadow: 'var(--shadow-clay)' }}>{f.icon}</div>
+                  <div style={{ marginBottom: 14 }}>
+                    <ClayIcon name={f.iconName} size={48} />
+                  </div>
                   <h3 style={{ fontSize: 17, fontWeight: 700, marginBottom: 6 }}>{f.title}</h3>
                   <p style={{ fontSize: 14, color: 'var(--text-secondary)', lineHeight: 1.5 }}>{f.desc}</p>
                 </ClayCard>
@@ -255,15 +300,17 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
           </div>
         </section>
 
-        {/* PLAYGROUND */}
+        {/* ── PLAYGROUND ─────────────────────────────────────────────────────── */}
         <section id="playground" style={{ padding: '80px 0' }}>
           <SectionHeading reducedMotion={prefersReducedMotion} title="Live component playground" subtitle="Tune shape, surface, and spring response in real time. Press the preview button to feel each physics preset before you ship it." />
           <ClayPlayground />
         </section>
 
-        {/* COMPONENTS */}
+        {/* ── COMPONENTS ─────────────────────────────────────────────────────── */}
         <section id="components" style={{ padding: '80px 0' }}>
-          <ScrollReveal><SectionHeading reducedMotion={prefersReducedMotion} title="Production-ready components" subtitle="Not just demos — real components you can drop into your next project. Every element is optimized for performance, accessibility, and delightful interaction." /></ScrollReveal>
+          <ScrollReveal>
+            <SectionHeading reducedMotion={prefersReducedMotion} title="Production-ready components" subtitle="Not just demos — real components you can drop into your next project. Every element is optimized for performance, accessibility, and delightful interaction." />
+          </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
             <div style={{ marginBottom: 48 }}>
@@ -349,16 +396,90 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
           </ScrollReveal>
         </section>
 
-        {/* FOR TEAMS */}
+        {/* ── ASSETS GALLERY ─────────────────────────────────────────────────── */}
+        <section id="assets" style={{ padding: '80px 0' }}>
+          <ScrollReveal>
+            <SectionHeading
+              reducedMotion={prefersReducedMotion}
+              title="Visual asset pack"
+              subtitle="21 production-ready SVGs — clay icon pills, component thumbnails, hero backgrounds, and CTA button states. All MIT licensed and tree-shakeable."
+            />
+          </ScrollReveal>
+
+          {/* Icon row */}
+          <ScrollReveal delay={0.08}>
+            <div style={{ marginBottom: 40 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>Clay Icon Pills</h3>
+              <ClayIconRow size={56} gap={16} />
+            </div>
+          </ScrollReveal>
+
+          {/* Component thumbnail grid */}
+          <ScrollReveal delay={0.12}>
+            <div style={{ marginBottom: 40 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>Component Thumbnails</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 20 }}>
+                {THUMBNAILS.map((t, i) => (
+                  <ScrollReveal key={t.file} delay={i * 0.07}>
+                    <motion.div
+                      whileHover={{ y: -4, boxShadow: '0 20px 48px rgba(0,0,0,0.12)' }}
+                      style={{
+                        borderRadius: 20,
+                        overflow: 'hidden',
+                        background: 'var(--bg-card)',
+                        boxShadow: 'var(--shadow-clay)',
+                        cursor: 'default',
+                      }}
+                    >
+                      <img
+                        src={`/assets/thumbs/${t.file}`}
+                        alt={`${t.label} component preview`}
+                        style={{ width: '100%', display: 'block', aspectRatio: '1 / 1', objectFit: 'cover' }}
+                        loading="lazy"
+                      />
+                      <div style={{ padding: '10px 14px 12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                        <span style={{ fontSize: 13, fontWeight: 600, color: 'var(--text-primary)' }}>{t.label}</span>
+                        <ClayBadge colorway={t.colorway as any} style={{ fontSize: 11, padding: '2px 8px' }}>{t.colorway}</ClayBadge>
+                      </div>
+                    </motion.div>
+                  </ScrollReveal>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* CTA button states strip */}
+          <ScrollReveal delay={0.1}>
+            <div style={{ marginBottom: 16 }}>
+              <h3 style={{ fontSize: 14, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.06em', color: 'var(--text-secondary)', marginBottom: 16 }}>CTA Button States</h3>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 16 }}>
+                {(['default', 'hover', 'pressed', 'disabled'] as const).map((state) => (
+                  <div key={state} style={{ borderRadius: 16, overflow: 'hidden', background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)' }}>
+                    <img
+                      src={`/assets/cta/cta-${state}.svg`}
+                      alt={`CTA button ${state} state`}
+                      style={{ width: '100%', display: 'block' }}
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </ScrollReveal>
+        </section>
+
+        {/* ── FOR TEAMS ──────────────────────────────────────────────────────── */}
         <section id="teams" style={{ padding: '80px 0' }}>
-          <ScrollReveal><SectionHeading reducedMotion={prefersReducedMotion} title="Built for every team" subtitle="Whether you are a designer sketching in Figma or a developer shipping to production, Mochi UI fits your workflow." /></ScrollReveal>
+          <ScrollReveal>
+            <SectionHeading reducedMotion={prefersReducedMotion} title="Built for every team" subtitle="Whether you are a designer sketching in Figma or a developer shipping to production, Mochi UI fits your workflow." />
+          </ScrollReveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
             <ScrollReveal delay={0.1}><ClayCard colorway="blue"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Figma /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Designers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['Figma variable library with 1:1 token mapping', 'Auto-layout components that mirror React props', 'Dark mode preview baked into every frame', 'Accessibility annotations for WCAG compliance'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
             <ScrollReveal delay={0.2}><ClayCard colorway="mint"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Code /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Developers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['Tree-shakeable ESM exports with zero runtime overhead', 'TypeScript-native with strict prop inference', 'CSS custom properties for instant theming', 'SSR-friendly with Astro, Next.js, and Remix'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
           </div>
         </section>
 
-        {/* GET STARTED */}
+        {/* ── GET STARTED ────────────────────────────────────────────────────── */}
         <section id="start" style={{ padding: '80px 0' }}>
           <ScrollReveal>
             <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center', padding: '64px 32px', borderRadius: 28, background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)' }}>
@@ -387,14 +508,33 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
         </ClayModal>
       </main>
 
+      {/* ── FOOTER ─────────────────────────────────────────────────────────── */}
       <footer style={{ marginTop: 64, padding: '48px 24px 32px', borderTop: '1px solid rgba(0,0,0,0.05)', textAlign: 'center', color: 'var(--text-secondary)', fontSize: 14 }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ display: 'flex', justifyContent: 'center', gap: 24, flexWrap: 'wrap', marginBottom: 24 }}>
-            {['Home', 'About', 'Features', 'Playground', 'Components'].map(label => (
+            {['Home', 'About', 'Features', 'Playground', 'Components', 'Assets'].map(label => (
               <a key={label} href={`#${label.toLowerCase()}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>{label}</a>
             ))}
             <a href="https://github.com/qt314wink/mochi-ui" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>GitHub</a>
           </div>
+
+          {/* Asset pack download CTA */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 16, background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)', marginBottom: 28 }}>
+            <img src="/assets/pack-cover.svg" alt="" aria-hidden="true" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover' }} />
+            <div style={{ textAlign: 'left' }}>
+              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Mochi UI Asset Pack</div>
+              <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>21 SVG files · MIT License</div>
+            </div>
+            <a
+              href="/assets/asset-manifest.json"
+              download
+              onClick={() => audio.success()}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, background: 'var(--mochi-mint)', color: 'white', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}
+            >
+              <Icons.Download /> Download
+            </a>
+          </div>
+
           <p style={{ marginBottom: 8 }}>Mochi UI — A claymorphism design system built with Astro, React, and Motion.</p>
           <p style={{ fontSize: 12, opacity: 0.7 }}>© {new Date().getFullYear()} Mochi UI. Open source under MIT License.</p>
         </div>
