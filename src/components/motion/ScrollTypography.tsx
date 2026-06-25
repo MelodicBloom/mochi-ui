@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
+import type { ElementType } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
 
-// ─── ScrollReveal ────────────────────────────────────────────────────────────
+// ─── ScrollReveal ───
 export interface ScrollRevealProps {
   children: React.ReactNode;
   delay?: number;
@@ -27,10 +28,10 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   </motion.div>
 );
 
-// ─── SplitText ───────────────────────────────────────────────────────────────
+// ─── SplitText ───
 export interface SplitTextProps {
   text: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: ElementType;
   stagger?: number;
   delay?: number;
   className?: string;
@@ -42,10 +43,8 @@ export const SplitText: React.FC<SplitTextProps> = ({
 }) => {
   const words = text.split(' ');
   return (
-    // aria-label on outer element = screen reader reads full text as one string.
-    // aria-hidden on each word span = prevents word-by-word stuttering in AT.
     <Tag className={className} style={{ ...style, display: 'block' }} aria-label={text}>
-      {words.map((word, wi) => (
+      {words.map((word: string, wi: number) => (
         <span key={wi} aria-hidden="true" style={{ display: 'inline-block', overflow: 'hidden', marginRight: '0.25em' }}>
           <motion.span
             initial={{ y: '110%', opacity: 0 }}
@@ -62,7 +61,7 @@ export const SplitText: React.FC<SplitTextProps> = ({
   );
 };
 
-// ─── ParallaxLayer ───────────────────────────────────────────────────────────
+// ─── ParallaxLayer ───
 export interface ParallaxLayerProps {
   children: React.ReactNode;
   speed?: number;
@@ -82,7 +81,7 @@ export const ParallaxLayer: React.FC<ParallaxLayerProps> = ({ children, speed = 
   );
 };
 
-// ─── ScrollProgressBar ───────────────────────────────────────────────────────
+// ─── ScrollProgressBar ───
 export interface ScrollProgressBarProps {
   height?: number;
   color?: string;
@@ -105,7 +104,7 @@ export const ScrollProgressBar: React.FC<ScrollProgressBarProps> = ({
   );
 };
 
-// ─── TextRevealBlock ─────────────────────────────────────────────────────────
+// ─── TextRevealBlock ───
 export interface TextRevealBlockProps {
   children: React.ReactNode;
   color?: string;
@@ -133,10 +132,7 @@ export const TextRevealBlock: React.FC<TextRevealBlockProps> = ({
         initial={{ scaleX: 0, originX: 0 }}
         animate={inView ? { scaleX: [0, 1, 1, 0], originX: ['0%', '0%', '100%', '100%'] } : {}}
         transition={{ duration, ease: 'easeInOut', times: [0, 0.45, 0.55, 1] }}
-        style={{
-          position: 'absolute', inset: 0,
-          background: color, borderRadius: 4,
-        }}
+        style={{ position: 'absolute', inset: 0, background: color, borderRadius: 4 }}
       />
     </div>
   );

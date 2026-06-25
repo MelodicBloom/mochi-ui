@@ -6,5 +6,15 @@ export default defineConfig({
   output: 'static',
   build: {
     assets: '_assets'
-  }
+  },
+  vite: {
+    build: {
+      rollupOptions: {
+        external: ['@splinetool/react-spline'],
+      },
+    },
+    optimizeDeps: {
+      exclude: ['@splinetool/react-spline'],
+    },
+  },
 });
