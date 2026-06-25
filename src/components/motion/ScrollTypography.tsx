@@ -28,11 +28,12 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 );
 
 // ─── SplitText ───
-// Using React.ElementType with an explicit JSX.IntrinsicElements fallback
-// avoids the `children: never` inference bug when `as` is a generic element type.
+// `as` is constrained to string tag names so TypeScript can resolve the element’s
+// intrinsic props without narrowing `children` to `never`.
+// We render via a typed intermediate variable to keep JSX happy.
 export interface SplitTextProps {
   text: string;
-  as?: keyof JSX.IntrinsicElements;
+  as?: string;
   stagger?: number;
   delay?: number;
   className?: string;
@@ -40,26 +41,34 @@ export interface SplitTextProps {
 }
 
 export const SplitText: React.FC<SplitTextProps> = ({
-  text, as: Tag = 'div', stagger = 0.035, delay = 0, className, style,
+  text,
+  as: tagName = 'div',
+  stagger = 0.035,
+  delay = 0,
+  className,
+  style,
 }) => {
   const words = text.split(' ');
-  const Wrapper = Tag as React.ElementType;
-  return (
-    <Wrapper className={className} style={{ ...style, display: 'block' }} aria-label={text}>
-      {words.map((word: string, wi: number) => (
-        <span key={wi} aria-hidden="true" style={{ display: 'inline-block', overflow: 'hidden', marginRight: '0.25em' }}>
-          <motion.span
-            initial={{ y: '110%', opacity: 0 }}
-            whileInView={{ y: '0%', opacity: 1 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.55, delay: delay + wi * stagger, ease: [0.34, 1.56, 0.64, 1] }}
-            style={{ display: 'inline-block' }}
-          >
-            {word}
-          </motion.span>
-        </span>
-      ))}
-    </Wrapper>
+  return React.createElement(
+    tagName,
+    { className, style: { ...style, display: 'block' }, 'aria-label': text },
+    words.map((word, wi) =>
+      React.createElement(
+        'span',
+        { key: wi, 'aria-hidden': true, style: { display: 'inline-block', overflow: 'hidden', marginRight: '0.25em' } },
+        React.createElement(
+          motion.span,
+          {
+            initial: { y: '110%', opacity: 0 },
+            whileInView: { y: '0%', opacity: 1 },
+            viewport: { once: true, margin: '-40px' },
+            transition: { duration: 0.55, delay: delay + wi * stagger, ease: [0.34, 1.56, 0.64, 1] },
+            style: { display: 'inline-block' },
+          },
+          word
+        )
+      )
+    )
   );
 };
 

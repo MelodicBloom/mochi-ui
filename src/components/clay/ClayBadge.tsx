@@ -8,6 +8,8 @@ export interface ClayBadgeProps {
   pulse?: boolean;
   dot?: boolean;
   onClick?: () => void;
+  style?: React.CSSProperties;
+  className?: string;
 }
 
 // All token-resolved — no raw hsl()
@@ -27,7 +29,7 @@ const sizes = {
 
 export const ClayBadge: React.FC<ClayBadgeProps> = ({
   children, colorway = 'mint', size = 'md',
-  pulse = false, dot = false, onClick,
+  pulse = false, dot = false, onClick, style, className,
 }) => {
   const tokens = colorwayTokens[colorway];
   const dims   = sizes[size];
@@ -36,6 +38,7 @@ export const ClayBadge: React.FC<ClayBadgeProps> = ({
     <motion.span
       role={onClick ? 'button' : undefined}
       tabIndex={onClick ? 0 : undefined}
+      className={className}
       onKeyDown={onClick ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); } : undefined}
       style={{
         display: 'inline-flex', alignItems: 'center',
@@ -52,6 +55,7 @@ export const ClayBadge: React.FC<ClayBadgeProps> = ({
         boxShadow: '2px 2px 6px rgba(0,0,0,0.08), inset -1px -1px 2px rgba(0,0,0,0.03), inset 1px 1px 2px rgba(255,255,255,0.7)',
         cursor: onClick ? 'pointer' : 'default',
         position: 'relative', overflow: 'hidden',
+        ...style,
       }}
       onClick={onClick}
       whileHover={onClick ? { y: -2, scale: 1.05 } : undefined}
