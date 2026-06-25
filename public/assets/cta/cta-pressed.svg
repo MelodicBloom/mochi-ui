@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256">
+  <defs>
+    <linearGradient id="btn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="s"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="rgba(5,150,105,0.40)"/></filter>
+  </defs>
+  <!-- Compressed: translated down 6px, slightly shorter -->
+  <rect x="124" y="44" width="776" height="180" rx="44" fill="url(#btn)" filter="url(#s)"/>
+  <rect x="124" y="44" width="776" height="180" rx="44" fill="rgba(0,0,0,0.08)"/>
+  <!-- No top highlight (compressed) -->
+  <text x="512" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="rgba(255,255,255,0.90)" text-anchor="middle" letter-spacing="-1">Get Started</text>
+  <text x="512" y="228" font-family="system-ui, sans-serif" font-size="20" font-weight="500" fill="rgba(255,255,255,0.55)" text-anchor="middle" letter-spacing="1">PRESSED</text>
+</svg>

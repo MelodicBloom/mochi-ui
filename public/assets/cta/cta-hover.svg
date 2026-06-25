@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256">
+  <defs>
+    <linearGradient id="btn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="s"><feDropShadow dx="0" dy="16" stdDeviation="28" flood-color="rgba(16,185,129,0.55)"/>
+    <feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="rgba(16,185,129,0.30)"/></filter>
+  </defs>
+  <!-- Slight lift: translated up 4px -->
+  <rect x="112" y="28" width="800" height="192" rx="48" fill="url(#btn)" filter="url(#s)"/>
+  <rect x="112" y="28" width="800" height="192" rx="48" fill="rgba(255,255,255,0.22)"/>
+  <rect x="128" y="32" width="768" height="40" rx="40" fill="rgba(255,255,255,0.35)"/>
+  <text x="512" y="138" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-1">Get Started</text>
+  <text x="512" y="224" font-family="system-ui, sans-serif" font-size="20" font-weight="500" fill="rgba(255,255,255,0.60)" text-anchor="middle" letter-spacing="1">HOVER</text>
+</svg>

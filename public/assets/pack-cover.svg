@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="40%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#fdf4ff"/>
+    </linearGradient>
+    <filter id="card"><feDropShadow dx="0" dy="16" stdDeviation="32" flood-color="rgba(0,0,0,0.10)"/></filter>
+    <filter id="blob"><feGaussianBlur stdDeviation="48"/></filter>
+    <filter id="icon"><feDropShadow dx="0" dy="8" stdDeviation="14" flood-color="rgba(0,0,0,0.12)"/></filter>
+  </defs>
+
+  <rect width="1200" height="1200" fill="url(#bg)"/>
+
+  <!-- Blobs -->
+  <ellipse cx="980" cy="180" rx="260" ry="230" fill="#bbf7d0" opacity="0.55" filter="url(#blob)"/>
+  <ellipse cx="220" cy="1020" rx="220" ry="190" fill="#f9a8d4" opacity="0.45" filter="url(#blob)"/>
+  <ellipse cx="1060" cy="900" rx="180" ry="160" fill="#bfdbfe" opacity="0.45" filter="url(#blob)"/>
+  <ellipse cx="160" cy="220" rx="160" ry="140" fill="#ddd6fe" opacity="0.40" filter="url(#blob)"/>
+
+  <!-- Title area -->
+  <rect x="100" y="80" width="1000" height="200" rx="36" fill="white" filter="url(#card)"/>
+  <rect x="100" y="80" width="1000" height="200" rx="36" fill="rgba(255,255,255,0.50)"/>
+
+  <!-- Logo pill -->
+  <rect x="132" y="112" width="80" height="80" rx="22" fill="#34d399" filter="url(#icon)"/>
+  <text x="172" y="164" font-family="system-ui, sans-serif" font-size="40" font-weight="800" fill="white" text-anchor="middle">M</text>
+
+  <text x="240" y="158" font-family="system-ui, sans-serif" font-size="42" font-weight="800" fill="#1f2937" letter-spacing="-1">Mochi UI Asset Pack</text>
+  <text x="240" y="196" font-family="system-ui, sans-serif" font-size="20" fill="#9ca3af">Icons · Thumbnails · Hero · CTA Buttons · 21 SVG files</text>
+
+  <!-- Row 1: icon tiles 8 icons -->
+  <!-- search -->
+  <rect x="100" y="316" width="128" height="128" rx="32" fill="#bbf7d0" filter="url(#icon)"/>
+  <circle cx="155" cy="366" r="26" fill="none" stroke="white" stroke-width="10"/>
+  <line x1="173" y1="384" x2="189" y2="400" stroke="white" stroke-width="10" stroke-linecap="round"/>
+  <!-- bell -->
+  <rect x="248" y="316" width="128" height="128" rx="32" fill="#bfdbfe" filter="url(#icon)"/>
+  <path d="M312 336 C295 336 282 349 282 366 C282 392 272 400 272 400 L352 400 C352 400 342 392 342 366 C342 349 329 336 312 336 Z" fill="white"/>
+  <ellipse cx="312" cy="408" rx="12" ry="8" fill="white"/>
+  <!-- chart -->
+  <rect x="396" y="316" width="128" height="128" rx="32" fill="#ddd6fe" filter="url(#icon)"/>
+  <rect x="430" y="390" width="16" height="32" rx="4" fill="white" opacity="0.7"/>
+  <rect x="454" y="374" width="16" height="48" rx="4" fill="white" opacity="0.85"/>
+  <rect x="478" y="358" width="16" height="64" rx="4" fill="white"/>
+  <!-- calendar -->
+  <rect x="544" y="316" width="128" height="128" rx="32" fill="#fecdd3" filter="url(#icon)"/>
+  <rect x="572" y="352" width="72" height="60" rx="8" fill="white" opacity="0.9"/>
+  <rect x="572" y="352" width="72" height="20" rx="8" fill="white"/>
+  <line x1="594" y1="340" x2="594" y2="358" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <line x1="622" y1="340" x2="622" y2="358" stroke="white" stroke-width="6" stroke-linecap="round"/>
+  <!-- message -->
+  <rect x="692" y="316" width="128" height="128" rx="32" fill="#fed7aa" filter="url(#icon)"/>
+  <path d="M724 348 C718 348 712 354 712 360 L712 396 C712 402 718 408 724 408 L748 408 L740 420 L740 408 L756 408 C762 408 768 402 768 396 L768 360 C768 354 762 348 756 348 Z" fill="white" opacity="0.9"/>
+  <!-- moon -->
+  <rect x="840" y="316" width="128" height="128" rx="32" fill="#a5b4fc" filter="url(#icon)"/>
+  <path d="M904 336 C904 336 880 344 880 380 C880 416 904 424 904 424 C876 424 856 404 856 380 C856 356 876 336 904 336 Z" fill="white"/>
+  <!-- sun -->
+  <rect x="988" y="316" width="128" height="128" rx="32" fill="#fde68a" filter="url(#icon)"/>
+  <circle cx="1052" cy="380" r="24" fill="white"/>
+  <line x1="1052" y1="340" x2="1052" y2="332" stroke="white" stroke-width="7" stroke-linecap="round"/>
+  <line x1="1052" y1="420" x2="1052" y2="428" stroke="white" stroke-width="7" stroke-linecap="round"/>
+  <line x1="1012" y1="380" x2="1004" y2="380" stroke="white" stroke-width="7" stroke-linecap="round"/>
+  <line x1="1092" y1="380" x2="1100" y2="380" stroke="white" stroke-width="7" stroke-linecap="round"/>
+
+  <!-- Row 2: 3 large thumbnail previews -->
+  <!-- Thumb button -->
+  <rect x="100" y="476" width="306" height="220" rx="28" fill="white" filter="url(#card)"/>
+  <rect x="120" y="496" width="130" height="50" rx="18" fill="#34d399"/>
+  <rect x="120" y="496" width="130" height="50" rx="18" fill="rgba(255,255,255,0.20)"/>
+  <text x="185" y="527" font-family="system-ui, sans-serif" font-size="18" font-weight="700" fill="white" text-anchor="middle">Get Started</text>
+  <rect x="120" y="562" width="100" height="38" rx="14" fill="#bbf7d0"/>
+  <text x="170" y="586" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#065f46" text-anchor="middle">SM</text>
+  <rect x="232" y="558" width="130" height="46" rx="16" fill="#34d399"/>
+  <text x="297" y="587" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="white" text-anchor="middle">MD</text>
+  <rect x="120" y="618" width="266" height="12" rx="6" fill="#f0fdf4"/>
+  <rect x="120" y="618" width="180" height="12" rx="6" fill="#34d399" opacity="0.5"/>
+  <text x="253" y="675" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#9ca3af" text-anchor="middle">ClayButton</text>
+  <!-- Thumb card -->
+  <rect x="447" y="476" width="306" height="220" rx="28" fill="white" filter="url(#card)"/>
+  <rect x="467" y="496" width="70" height="26" rx="13" fill="#3b82f6"/>
+  <text x="502" y="514" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="white" text-anchor="middle">Stats</text>
+  <text x="467" y="560" font-family="system-ui, sans-serif" font-size="36" font-weight="800" fill="#3b82f6">2,847</text>
+  <rect x="467" y="572" width="266" height="10" rx="5" fill="#dbeafe"/>
+  <rect x="467" y="572" width="192" height="10" rx="5" fill="#3b82f6"/>
+  <text x="600" y="675" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#9ca3af" text-anchor="middle">ClayCard</text>
+  <!-- Thumb toggle -->
+  <rect x="794" y="476" width="306" height="220" rx="28" fill="white" filter="url(#card)"/>
+  <rect x="814" y="508" width="88" height="44" rx="22" fill="#34d399"/>
+  <circle cx="880" cy="530" r="18" fill="white"/>
+  <text x="918" y="536" font-family="system-ui, sans-serif" font-size="15" fill="#374151">Notify</text>
+  <rect x="814" y="564" width="88" height="44" rx="22" fill="#3b82f6"/>
+  <circle cx="880" cy="586" r="18" fill="white"/>
+  <text x="918" y="592" font-family="system-ui, sans-serif" font-size="15" fill="#374151">Dark Mode</text>
+  <rect x="814" y="620" width="88" height="44" rx="22" fill="#e5e7eb"/>
+  <circle cx="840" cy="642" r="18" fill="white"/>
+  <text x="918" y="648" font-family="system-ui, sans-serif" font-size="15" fill="#9ca3af">Sound</text>
+  <text x="947" y="675" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#9ca3af" text-anchor="middle">ClayToggle</text>
+
+  <!-- Row 3: CTA states + hero blob preview -->
+  <!-- CTA strip -->
+  <rect x="100" y="732" width="690" height="100" rx="28" fill="#34d399" filter="url(#card)"/>
+  <rect x="100" y="732" width="690" height="100" rx="28" fill="rgba(255,255,255,0.18)"/>
+  <rect x="116" y="736" width="658" height="28" rx="24" fill="rgba(255,255,255,0.28)"/>
+  <text x="445" y="792" font-family="system-ui, sans-serif" font-size="32" font-weight="800" fill="white" text-anchor="middle">Get Started</text>
+
+  <!-- Hero bg mini -->
+  <rect x="820" y="732" width="280" height="200" rx="28" fill="#f0fdf4" filter="url(#card)"/>
+  <ellipse cx="1020" cy="780" rx="80" ry="70" fill="#bbf7d0" opacity="0.70"/>
+  <ellipse cx="870" cy="880" rx="60" ry="50" fill="#f9a8d4" opacity="0.60"/>
+  <ellipse cx="1060" cy="880" rx="50" ry="44" fill="#bfdbfe" opacity="0.60"/>
+  <text x="960" y="920" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#9ca3af" text-anchor="middle">hero-bg.svg</text>
+
+  <!-- Footer strip -->
+  <text x="100" y="988" font-family="system-ui, sans-serif" font-size="20" font-weight="600" fill="#9ca3af">21 production-ready SVG assets · MIT License · mochi-ui-two.vercel.app</text>
+
+  <!-- Bottom color swatch row -->
+  <circle cx="150"  cy="1060" r="36" fill="#34d399"/>
+  <circle cx="244"  cy="1060" r="36" fill="#3b82f6"/>
+  <circle cx="338"  cy="1060" r="36" fill="#ec4899"/>
+  <circle cx="432"  cy="1060" r="36" fill="#8b5cf6"/>
+  <circle cx="526"  cy="1060" r="36" fill="#fb923c"/>
+  <circle cx="620"  cy="1060" r="36" fill="#f59e0b"/>
+  <circle cx="714"  cy="1060" r="36" fill="#6366f1"/>
+  <circle cx="808"  cy="1060" r="36" fill="#9ca3af"/>
+
+  <text x="150"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">mint</text>
+  <text x="244"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">blue</text>
+  <text x="338"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">pink</text>
+  <text x="432"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">lavender</text>
+  <text x="526"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">peach</text>
+  <text x="620"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">amber</text>
+  <text x="714"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">indigo</text>
+  <text x="808"  y="1122" font-family="system-ui, sans-serif" font-size="14" fill="#9ca3af" text-anchor="middle">neutral</text>
+</svg>

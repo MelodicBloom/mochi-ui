@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256">
+  <defs>
+    <linearGradient id="btn" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6ee7b7"/>
+      <stop offset="100%" stop-color="#34d399"/>
+    </linearGradient>
+    <filter id="s"><feDropShadow dx="0" dy="10" stdDeviation="20" flood-color="rgba(52,211,153,0.45)"/>
+    <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(52,211,153,0.25)"/></filter>
+  </defs>
+  <rect x="112" y="32" width="800" height="192" rx="48" fill="url(#btn)" filter="url(#s)"/>
+  <rect x="112" y="32" width="800" height="192" rx="48" fill="rgba(255,255,255,0.18)"/>
+  <!-- Inner top highlight -->
+  <rect x="128" y="36" width="768" height="40" rx="40" fill="rgba(255,255,255,0.30)"/>
+  <!-- Text -->
+  <text x="512" y="142" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="white" text-anchor="middle" letter-spacing="-1">Get Started</text>
+  <!-- Label -->
+  <text x="512" y="228" font-family="system-ui, sans-serif" font-size="20" font-weight="500" fill="rgba(255,255,255,0.60)" text-anchor="middle" letter-spacing="1">DEFAULT</text>
+</svg>

@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "generated": "2026-06-25",
+  "license": "MIT",
+  "baseUrl": "/assets",
+  "categories": {
+    "icons": {
+      "description": "Clay-style icon pills — 512x512 SVG, colored rounded-rect background, white symbol",
+      "files": [
+        { "name": "icon-search.svg",   "colorway": "mint",     "hex": "#34d399", "usage": "Search / find actions" },
+        { "name": "icon-bell.svg",     "colorway": "blue",     "hex": "#3b82f6", "usage": "Notifications" },
+        { "name": "icon-chart.svg",    "colorway": "lavender", "hex": "#8b5cf6", "usage": "Analytics / data viz" },
+        { "name": "icon-calendar.svg", "colorway": "pink",     "hex": "#ec4899", "usage": "Events / scheduling" },
+        { "name": "icon-message.svg",  "colorway": "peach",    "hex": "#f97316", "usage": "Chat / messaging" },
+        { "name": "icon-moon.svg",     "colorway": "indigo",   "hex": "#6366f1", "usage": "Dark mode toggle" },
+        { "name": "icon-sun.svg",      "colorway": "amber",    "hex": "#f59e0b", "usage": "Light mode toggle" },
+        { "name": "icon-copy.svg",     "colorway": "emerald",  "hex": "#10b981", "usage": "Copy to clipboard" }
+      ]
+    },
+    "hero": {
+      "description": "Hero section background — 1440x800 SVG with clay blobs, dot grid, radial gradients",
+      "files": [
+        { "name": "hero-bg.svg", "width": 1440, "height": 800, "usage": "Hero section background image" }
+      ]
+    },
+    "thumbnails": {
+      "description": "Component preview thumbnails — 800x800 SVG, clay card mockup with component demo",
+      "files": [
+        { "name": "thumb-button.svg", "component": "ClayButton", "colorway": "mint"    },
+        { "name": "thumb-card.svg",   "component": "ClayCard",   "colorway": "blue"    },
+        { "name": "thumb-input.svg",  "component": "ClayInput",  "colorway": "lavender"},
+        { "name": "thumb-toggle.svg", "component": "ClayToggle", "colorway": "pink"   },
+        { "name": "thumb-slider.svg", "component": "ClaySlider", "colorway": "amber"  },
+        { "name": "thumb-avatar.svg", "component": "ClayAvatar", "colorway": "lavender"}
+      ]
+    },
+    "cta": {
+      "description": "CTA button states — 1024x256 SVG showing default/hover/pressed/disabled rendering",
+      "files": [
+        { "name": "cta-default.svg",  "state": "default",  "colorway": "mint" },
+        { "name": "cta-hover.svg",    "state": "hover",    "colorway": "mint" },
+        { "name": "cta-pressed.svg",  "state": "pressed",  "colorway": "mint" },
+        { "name": "cta-disabled.svg", "state": "disabled", "colorway": "neutral" }
+      ]
+    },
+    "marketing": {
+      "description": "Social and marketing assets",
+      "files": [
+        { "name": "pack-cover.svg",  "width": 1200, "height": 1200, "usage": "Asset pack cover / social share" },
+        { "name": "og-image.svg",    "width": 1200, "height": 630,  "usage": "Open Graph / Twitter card" }
+      ]
+    }
+  }
+}

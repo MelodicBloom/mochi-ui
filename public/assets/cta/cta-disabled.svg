@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="256" viewBox="0 0 1024 256">
+  <rect x="112" y="32" width="800" height="192" rx="48" fill="#e5e7eb"/>
+  <rect x="128" y="36" width="768" height="40" rx="40" fill="rgba(255,255,255,0.50)"/>
+  <text x="512" y="142" font-family="system-ui, -apple-system, sans-serif" font-size="52" font-weight="800" fill="#9ca3af" text-anchor="middle" letter-spacing="-1">Get Started</text>
+  <text x="512" y="228" font-family="system-ui, sans-serif" font-size="20" font-weight="500" fill="#9ca3af" text-anchor="middle" letter-spacing="1">DISABLED</text>
+</svg>

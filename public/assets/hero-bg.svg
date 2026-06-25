@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1440" height="800" viewBox="0 0 1440 800">
+  <defs>
+    <radialGradient id="grad" cx="30%" cy="40%" r="80%">
+      <stop offset="0%" stop-color="#f0fdf4"/>
+      <stop offset="45%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#fdf4ff"/>
+    </radialGradient>
+    <filter id="blob">
+      <feGaussianBlur stdDeviation="40" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="60"/>
+    </filter>
+  </defs>
+
+  <!-- Base gradient -->
+  <rect width="1440" height="800" fill="url(#grad)"/>
+
+  <!-- Glow underlays -->
+  <ellipse cx="1100" cy="200" rx="320" ry="280" fill="#bbf7d0" opacity="0.55" filter="url(#glow)"/>
+  <ellipse cx="1280" cy="600" rx="200" ry="180" fill="#bfdbfe" opacity="0.45" filter="url(#glow)"/>
+  <ellipse cx="160"  cy="680" rx="220" ry="190" fill="#f9a8d4" opacity="0.38" filter="url(#glow)"/>
+  <ellipse cx="300"  cy="150" rx="160" ry="140" fill="#ddd6fe" opacity="0.40" filter="url(#glow)"/>
+  <ellipse cx="700"  cy="680" rx="180" ry="150" fill="#fde68a" opacity="0.30" filter="url(#glow)"/>
+
+  <!-- Clay blob 1 — mint, top right -->
+  <ellipse cx="1080" cy="190" rx="240" ry="210" fill="#bbf7d0" opacity="0.70" filter="url(#blob)"/>
+  <ellipse cx="1060" cy="170" rx="180" ry="160" fill="#6ee7b7" opacity="0.40"/>
+
+  <!-- Clay blob 2 — blue, bottom right -->
+  <ellipse cx="1260" cy="590" rx="170" ry="150" fill="#bfdbfe" opacity="0.65" filter="url(#blob)"/>
+  <ellipse cx="1245" cy="575" rx="120" ry="110" fill="#93c5fd" opacity="0.35"/>
+
+  <!-- Clay blob 3 — pink, bottom left -->
+  <ellipse cx="140"  cy="670" rx="190" ry="165" fill="#fecdd3" opacity="0.60" filter="url(#blob)"/>
+  <ellipse cx="125"  cy="655" rx="130" ry="115" fill="#f9a8d4" opacity="0.35"/>
+
+  <!-- Clay blob 4 — lavender, top left accent -->
+  <ellipse cx="280"  cy="140" rx="140" ry="125" fill="#ede9fe" opacity="0.55" filter="url(#blob)"/>
+
+  <!-- Small floating circles — scattered sparkle -->
+  <circle cx="560"  cy="100" r="24" fill="#bbf7d0" opacity="0.55"/>
+  <circle cx="860"  cy="60"  r="16" fill="#bfdbfe" opacity="0.50"/>
+  <circle cx="1360" cy="360" r="20" fill="#ddd6fe" opacity="0.45"/>
+  <circle cx="80"   cy="380" r="14" fill="#fde68a" opacity="0.50"/>
+  <circle cx="420"  cy="740" r="18" fill="#6ee7b7" opacity="0.40"/>
+  <circle cx="980"  cy="740" r="22" fill="#f9a8d4" opacity="0.40"/>
+
+  <!-- Subtle dot grid overlay -->
+  <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+    <circle cx="2" cy="2" r="1.5" fill="rgba(0,0,0,0.04)"/>
+  </pattern>
+  <rect width="1440" height="800" fill="url(#dots)"/>
+</svg>
