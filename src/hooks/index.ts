@@ -1,21 +1,20 @@
-// Spring physics
+// Spring physics config
 export { SPRING_PRESETS, DEFAULT_CONFIG } from './spring-physics';
 export type { SpringConfig, SpringState } from './spring-physics';
 
-// Spring hooks (all Framer Motion powered)
+// Spring hooks — export what actually exists in spring-hooks.ts
 export {
-  useSpring,
-  useSprings,
-  useSpringTransform,
-  useScrollSpring,
-  useMagnetic,
-  useSquish,
-  useStaggeredReveal,
-  useReducedMotion,
+  useClayShadow,
+  useClayPress,
+  useMouseTilt,
+  useClayFloat,
+  useScrollVelocityScale,
+  useSpringCounter,
+  useMagneticAttraction,
+  useClayDrag,
 } from './spring-hooks';
-export type { SpringHandle, TransformState, SpringTransformResult } from './spring-hooks';
 
 // Utility hooks
-export { useCountUp }      from './useCountUp';
+export { useCountUp }       from './useCountUp';
 export { useActiveSection } from './useActiveSection';
-export { useToast }        from './useToast';
+export { useToast }         from './useToast';

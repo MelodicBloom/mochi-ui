@@ -130,10 +130,9 @@ const ShowcaseInner: React.FC = () => {
     { id: 'physics', label: 'Physics'   },
   ];
 
-  // Snippet map — one per section
   const snippets: Record<string, { label: string; code: string }> = {
     buttons: { label: 'ClayButton', code: `<ClayButton colorway="mint" size="md">\n  Click me\n</ClayButton>` },
-    cards:   { label: 'ClayCard',   code: `<ClayCard colorway="blue" header={<ClayBadge colorway="blue">Stats</ClayBadge>}>\n  Content here\n</ClayCard>` },
+    cards:   { label: 'ClayCard',   code: `<ClayCard colorway="blue">\n  Content here\n</ClayCard>` },
     inputs:  { label: 'ClayInput',  code: `<ClayInput\n  label="Search"\n  placeholder="Search anything..."\n  icon={<SearchIcon />}\n/>` },
     toggles: { label: 'ClayToggle', code: `<ClayToggle\n  colorway="mint"\n  label="Enable feature"\n  checked={checked}\n  onChange={setChecked}\n/>` },
     charts:  { label: 'ClayChartBar', code: `<ClayChartBar value={85} label="Q4" colorway="blue" />` },
@@ -188,7 +187,6 @@ const ShowcaseInner: React.FC = () => {
           </div>
         </div>
 
-        {/* Nav */}
         <nav style={{
           maxWidth: 1200, margin: '0 auto', padding: '0 24px 12px',
           display: 'flex', gap: 8, overflowX: 'auto',
@@ -209,7 +207,6 @@ const ShowcaseInner: React.FC = () => {
         </nav>
       </header>
 
-      {/* Main */}
       <main style={{ maxWidth: 1200, margin: '0 auto', padding: 32 }}>
         <AnimatePresence mode="wait">
           <motion.div
@@ -219,7 +216,6 @@ const ShowcaseInner: React.FC = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
-            {/* Copy snippet bar — shown on every section */}
             {snippets[activeSection] && (
               <div style={{
                 display: 'flex', alignItems: 'center', justifyContent: 'space-between',
@@ -304,7 +300,8 @@ const ShowcaseInner: React.FC = () => {
                   and respond to mouse position with parallax.
                 </p>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 24 }}>
-                  <ClayCard colorway="mint" header={<ClayBadge colorway="mint">Stats</ClayBadge>}>
+                  <ClayCard colorway="mint">
+                    <div style={{ marginBottom: 12 }}><ClayBadge colorway="mint">Stats</ClayBadge></div>
                     <div style={{ fontSize: 48, fontWeight: 700, color: 'var(--mochi-mint)' }}>2,847</div>
                     <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Total interactions this month</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginTop: 8 }}>
@@ -312,12 +309,14 @@ const ShowcaseInner: React.FC = () => {
                       <span style={{ fontSize: 12, color: 'var(--mochi-mint)', fontWeight: 600 }}>+12.5% from last month</span>
                     </div>
                   </ClayCard>
-                  <ClayCard colorway="blue" header={<ClayBadge colorway="blue">Revenue</ClayBadge>}>
+                  <ClayCard colorway="blue">
+                    <div style={{ marginBottom: 12 }}><ClayBadge colorway="blue">Revenue</ClayBadge></div>
                     <div style={{ fontSize: 48, fontWeight: 700, color: 'var(--mochi-sky-blue)' }}>$48.2K</div>
                     <p style={{ color: 'var(--text-secondary)', fontSize: 14 }}>Monthly recurring revenue</p>
                     <ClaySlider value={72} onChange={() => {}} colorway="blue" showTicks label="Goal progress" />
                   </ClayCard>
-                  <ClayCard colorway="pink" header={<ClayBadge colorway="pink">Users</ClayBadge>}>
+                  <ClayCard colorway="pink">
+                    <div style={{ marginBottom: 12 }}><ClayBadge colorway="pink">Users</ClayBadge></div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
                       <ClayAvatar size="lg" fallback="JD" status="online" />
                       <div>
@@ -422,7 +421,7 @@ const ShowcaseInner: React.FC = () => {
                 </p>
                 <BentoGrid columns={4} gap={24}>
                   <BentoItem colSpan={1} rowSpan={2} delay={0}>
-                    <ClayCard colorway="ivory" style={{ height: '100%' }}>
+                    <ClayCard colorway="neutral" style={{ height: '100%' }}>
                       <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
                         <div><ClayBadge colorway="neutral">Overview</ClayBadge><div style={{ marginTop: 16 }}><ChartIcon /></div></div>
                         <div><div style={{ fontSize: 36, fontWeight: 700 }}>84%</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Completion rate</div></div>
@@ -497,7 +496,6 @@ const ShowcaseInner: React.FC = () => {
         </AnimatePresence>
       </main>
 
-      {/* Footer */}
       <footer style={{ marginTop: 64, padding: '32px 24px', borderTop: '1px solid rgba(0,0,0,0.05)', textAlign: 'center', color: 'var(--text-secondary)', fontSize: 13 }}>
         <p>Mochi UI — Claymorphism Design System</p>
         <p style={{ marginTop: 4 }}>Built with Astro + Motion + Spring Physics</p>
@@ -506,7 +504,6 @@ const ShowcaseInner: React.FC = () => {
   );
 };
 
-// Outer wrapper supplies the notification context
 const ShowcasePage: React.FC = () => (
   <ClayNotificationProvider>
     <ShowcaseInner />

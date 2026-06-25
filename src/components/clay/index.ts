@@ -24,8 +24,8 @@ export type { ClayToggleProps }    from './ClayToggle';
 export { ClaySlider }              from './ClaySlider';
 export type { ClaySliderProps }    from './ClaySlider';
 
-export { ClaySegmentedControl }                   from './ClaySegmentedControl';
-export type { ClaySegmentedControlProps, SegmentedOption } from './ClaySegmentedControl';
+export { ClaySegmentedControl }                        from './ClaySegmentedControl';
+export type { ClaySegmentedControlProps, SegmentOption } from './ClaySegmentedControl';
 
 // ── Feedback & Status ─────────────────────────────
 export { ClayProgress }            from './ClayProgress';

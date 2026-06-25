@@ -1,10 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'motion/react';
 
 export interface ClayHero3DProps {
   splineUrl?: string;
-  headline?: string;
-  subheadline?: string;
+  headline?: React.ReactNode;
+  subheadline?: React.ReactNode;
   cta?: React.ReactNode;
   colorway?: 'mint' | 'blue' | 'pink' | 'lavender' | 'peach';
 }
@@ -17,7 +17,6 @@ const blobColors: Record<string, string[]> = {
   peach:    ['#ffd1aa', '#ffe3c7', '#fff0e0'],
 };
 
-// Animated clay blob fallback — no external dependency
 const ClayBlob: React.FC<{ colorway: string }> = ({ colorway }) => {
   const colors = blobColors[colorway] ?? blobColors.mint;
   return (
@@ -40,14 +39,17 @@ const ClayBlob: React.FC<{ colorway: string }> = ({ colorway }) => {
   );
 };
 
-// Lazy Spline loader — only attempts import if splineUrl is provided
+// Lazy Spline loader — dynamic import is intentional; package may not be installed.
+// The @ts-ignore suppresses the TS2307 "cannot find module" error at build time
+// while still allowing runtime fallback to the clay blob when the module is absent.
 const SplineLazy: React.FC<{ url: string; fallback: React.ReactNode }> = ({ url, fallback }) => {
   const [SplineComp, setSplineComp] = useState<React.ComponentType<{ scene: string }> | null>(null);
   const [failed, setFailed]         = useState(false);
 
   useEffect(() => {
+    // @ts-ignore — optional peer dependency, gracefully falls back to clay blob
     import('@splinetool/react-spline')
-      .then((mod) => setSplineComp(() => mod.default as React.ComponentType<{ scene: string }>))
+      .then((mod: { default: React.ComponentType<{ scene: string }> }) => setSplineComp(() => mod.default))
       .catch(() => setFailed(true));
   }, []);
 
@@ -73,24 +75,21 @@ export const ClayHero3D: React.FC<ClayHero3DProps> = ({
       padding: '80px 48px',
       minHeight: '90vh',
     }}>
-      {/* Text column */}
       <div>
-        <motion.h1
+        <motion.div
           initial={{ opacity: 0, y: 32 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: [0.34, 1.56, 0.64, 1] }}
-          style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 800, lineHeight: 1.15, color: 'var(--text-primary)', margin: '0 0 20px' }}
         >
           {headline}
-        </motion.h1>
-        <motion.p
+        </motion.div>
+        <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.12, ease: [0.34, 1.56, 0.64, 1] }}
-          style={{ fontSize: 'clamp(1rem, 2vw, 1.25rem)', color: 'var(--text-secondary)', margin: '0 0 32px', lineHeight: 1.6 }}
         >
           {subheadline}
-        </motion.p>
+        </motion.div>
         {cta && (
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -102,7 +101,6 @@ export const ClayHero3D: React.FC<ClayHero3DProps> = ({
         )}
       </div>
 
-      {/* 3D / blob column */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         {splineUrl
           ? <SplineLazy url={splineUrl} fallback={blob} />

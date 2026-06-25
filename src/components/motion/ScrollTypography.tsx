@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import type { ElementType } from 'react';
 import { motion, useScroll, useTransform, useSpring, useInView } from 'motion/react';
 
 // ─── ScrollReveal ───
@@ -29,9 +28,11 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
 );
 
 // ─── SplitText ───
+// Using React.ElementType with an explicit JSX.IntrinsicElements fallback
+// avoids the `children: never` inference bug when `as` is a generic element type.
 export interface SplitTextProps {
   text: string;
-  as?: ElementType;
+  as?: keyof JSX.IntrinsicElements;
   stagger?: number;
   delay?: number;
   className?: string;
@@ -42,8 +43,9 @@ export const SplitText: React.FC<SplitTextProps> = ({
   text, as: Tag = 'div', stagger = 0.035, delay = 0, className, style,
 }) => {
   const words = text.split(' ');
+  const Wrapper = Tag as React.ElementType;
   return (
-    <Tag className={className} style={{ ...style, display: 'block' }} aria-label={text}>
+    <Wrapper className={className} style={{ ...style, display: 'block' }} aria-label={text}>
       {words.map((word: string, wi: number) => (
         <span key={wi} aria-hidden="true" style={{ display: 'inline-block', overflow: 'hidden', marginRight: '0.25em' }}>
           <motion.span
@@ -57,7 +59,7 @@ export const SplitText: React.FC<SplitTextProps> = ({
           </motion.span>
         </span>
       ))}
-    </Tag>
+    </Wrapper>
   );
 };
 

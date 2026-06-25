@@ -16,30 +16,23 @@ export { ClayModal, type ClayModalProps } from './clay/ClayModal';
 export { ClaySkeleton, type ClaySkeletonProps } from './clay/ClaySkeleton';
 export { ClayProgress, type ClayProgressProps } from './clay/ClayProgress';
 export { ClaySegmentedControl, type ClaySegmentedControlProps } from './clay/ClaySegmentedControl';
-export {
-  ClayNotificationProvider,
-  useNotification,
-  type NotificationOptions,
-  type NotificationType,
-} from './clay/ClayNotification';
 
 // Animation Systems
-export {
-  PhysicsProvider,
-  usePhysics,
+export { 
+  PhysicsProvider, 
+  usePhysics, 
   toSpringConfig,
   physicsPresets,
   triggerHaptic,
   useClayState,
-  useSpringTransform,
   type PhysicsConfig,
   type PhysicsPreset,
   type ClayState,
 } from './animations/SpringPhysics';
 
 export { ClayRebound, type ClayReboundProps } from './animations/ClayRebound';
-export {
-  FloatingContainer,
+export { 
+  FloatingContainer, 
   FloatingGroup,
   ParallaxLayer,
   type FloatingContainerProps,
@@ -48,10 +41,29 @@ export {
 } from './animations/FloatingContainer';
 
 // Layout
-export {
-  BentoGrid,
+export { 
+  BentoGrid, 
   BentoItem,
   BentoLayouts,
   type BentoGridProps,
   type BentoItemProps,
 } from './layout/BentoGrid';
+
+// Hero
+export { ClayHero3D, type ClayHero3DProps } from './hero/ClayHero3D';
+
+// Playground
+export { ClayPlayground } from './playground/ClayPlayground';
+
+// Motion / Scroll Typography
+export {
+  ScrollReveal,
+  SplitText,
+  ParallaxLayer as ParallaxLayerScroll,
+  ScrollProgressBar,
+  TextRevealBlock,
+  type ScrollRevealProps,
+  type SplitTextProps,
+  type ScrollProgressBarProps,
+  type TextRevealBlockProps,
+} from './motion/ScrollTypography';

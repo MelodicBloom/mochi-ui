@@ -68,18 +68,17 @@ export { SPRING_PRESETS, DEFAULT_CONFIG } from './hooks/spring-physics';
 export type { SpringConfig, SpringState } from './hooks/spring-physics';
 
 // ── Hooks ────────────────────────────────────────────────────────────────────
-// Spring hooks (Framer Motion powered)
+// Spring hooks — only export what actually exists in the file
 export {
-  useSpring,
-  useSprings,
-  useSpringTransform,
-  useScrollSpring,
-  useMagnetic,
-  useSquish,
-  useStaggeredReveal,
-  useReducedMotion,
+  useClayShadow,
+  useClayPress,
+  useMouseTilt,
+  useClayFloat,
+  useScrollVelocityScale,
+  useSpringCounter,
+  useMagneticAttraction,
+  useClayDrag,
 } from './hooks/spring-hooks';
-export type { SpringHandle, TransformState, SpringTransformResult } from './hooks/spring-hooks';
 
 // Utility hooks
 export { useCountUp }               from './hooks/useCountUp';
