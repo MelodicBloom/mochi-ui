@@ -1,0 +1,87 @@
+/**
+ * MOCHI UI — Global Animations & Utilities v2.0
+ */
+
+@keyframes hapticPulse {
+  0%   { opacity: 0.6; transform: scale(0.8); }
+  100% { opacity: 0;   transform: scale(1.5); }
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(30px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ─── Scroll-Triggered Reveal ─── */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--mochi-duration-slow) var(--mochi-ease-out),
+    transform var(--mochi-duration-slow) var(--mochi-spring-gentle);
+}
+.reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+
+/* ─── Stagger Children ─── */
+.stagger-children > * { opacity: 0; transform: translateY(16px); }
+.stagger-children.is-visible > * {
+  opacity: 1; transform: translateY(0);
+  transition:
+    opacity var(--mochi-duration-normal) var(--mochi-ease-out),
+    transform var(--mochi-duration-normal) var(--mochi-spring-snappy);
+}
+.stagger-children.is-visible > *:nth-child(1) { transition-delay: 0ms; }
+.stagger-children.is-visible > *:nth-child(2) { transition-delay: 50ms; }
+.stagger-children.is-visible > *:nth-child(3) { transition-delay: 100ms; }
+.stagger-children.is-visible > *:nth-child(4) { transition-delay: 150ms; }
+.stagger-children.is-visible > *:nth-child(5) { transition-delay: 200ms; }
+.stagger-children.is-visible > *:nth-child(6) { transition-delay: 250ms; }
+
+/* ─── Gradient Text ─── */
+.gradient-text {
+  background: linear-gradient(135deg, var(--mochi-terra-500), var(--mochi-clay-500));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ─── Clay Divider ─── */
+.clay-divider {
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--mochi-border) 20%, var(--mochi-border) 80%, transparent 100%);
+  border: none;
+}
+
+/* ─── Scrollbar ─── */
+.clay-scroll::-webkit-scrollbar { width: 8px; }
+.clay-scroll::-webkit-scrollbar-track { background: var(--mochi-surface-inset); border-radius: var(--mochi-radius-full); }
+.clay-scroll::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--mochi-sand-300), var(--mochi-sand-400)); border-radius: var(--mochi-radius-full); box-shadow: var(--mochi-clay-rest); }
+
+/* ─── Selection ─── */
+::selection { background: var(--mochi-terra-200); color: var(--mochi-terra-900); }
+
+/* ─── Focus Visible ─── */
+*:focus-visible { outline: 2px solid var(--mochi-terra-400); outline-offset: 2px; border-radius: 2px; }
+
+/* ─── Dark Mode ─── */
+[data-theme="dark"] { color-scheme: dark; }
+
+/* ─── Reduced Motion ─── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .reveal-on-scroll, .stagger-children > * { opacity: 1; transform: none; }
+}

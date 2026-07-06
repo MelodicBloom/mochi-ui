@@ -1,36 +1,43 @@
 {
-  "name": "mochi-ui",
-  "type": "module",
+  "name": "@mochi-ui/react",
   "version": "2.0.0",
-  "description": "A multi-sensory claymorphism design system with 3D shaders, spatial audio, spring physics, and Figma compatibility",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview",
-    "tokens": "node scripts/build-tokens.js",
-    "tokens:expand": "node scripts/expand-tokens.js",
-    "astro": "astro"
+  "description": "Claymorphism Design System & React Component Library with Spring Physics",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./styles": "./dist/styles.css"
   },
-  "dependencies": {
-    "astro": "^5.7.0",
-    "@astrojs/react": "^4.2.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "motion": "^12.9.0",
-    "three": "^0.165.0",
-    "@react-three/fiber": "^9.0.0",
-    "@react-three/drei": "^10.0.0",
-    "@react-three/postprocessing": "^3.0.0",
-    "gsap": "^3.13.0",
-    "lenis": "^1.1.0"
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs,esm --dts --external react --external react-dom",
+    "build:css": "postcss src/styles/*.css -o dist/styles.css",
+    "dev": "tsup src/index.ts --format cjs,esm --dts --watch",
+    "lint": "eslint src --ext .ts,.tsx",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0",
+    "react-dom": ">=18.0.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.0",
-    "@types/three": "^0.165.0",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "eslint": "^8.0.0",
+    "postcss": "^8.4.0",
+    "postcss-cli": "^11.0.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.3.0"
   },
-  "engines": {
-    "node": ">=20.0.0"
+  "keywords": ["claymorphism", "neumorphism", "design-system", "react", "spring-physics", "ui-components", "tailwind"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MelodicBloom/mochi-ui"
   }
 }
