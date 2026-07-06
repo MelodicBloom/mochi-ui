@@ -58,8 +58,10 @@ export const ClayButton = React.forwardRef<HTMLButtonElement, ClayButtonProps>(
       [forwardedRef]
     );
 
-    const magneticStyle = magnetic && !prefersReducedMotion ? useMagnetic(buttonRef, springConfig, magneticRadius) : {};
-    const squishStyle = squish && !prefersReducedMotion ? useSquish(buttonRef, springConfig) : {};
+    // Both hooks are always called unconditionally — the enabled flag
+    // short-circuits their internal effects without violating Rules of Hooks.
+    const magneticStyle = useMagnetic(buttonRef, springConfig, magneticRadius, magnetic && !prefersReducedMotion);
+    const squishStyle = useSquish(buttonRef, springConfig, squish && !prefersReducedMotion);
 
     const transformStyle: React.CSSProperties = {
       transform: `${(magneticStyle as any).transform || ''} ${(squishStyle as any).transform || ''}`.trim() || undefined,

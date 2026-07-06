@@ -182,14 +182,20 @@ export function useScrollSpring(config: Partial<SpringConfig> = {}) {
   return { scrollY, scrollProgress };
 }
 
+/**
+ * useMagnetic — always called unconditionally.
+ * Pass enabled=false to no-op the effect without changing hook call count.
+ */
 export function useMagnetic(
   ref: React.RefObject<HTMLElement | null>,
   config: Partial<SpringConfig> = {},
-  radius: number = 50
+  radius: number = 50,
+  enabled: boolean = true
 ) {
   const { style, setTransform } = useSpringTransform({ mass: 1.2, tension: 300, friction: 20, ...config });
 
   useEffect(() => {
+    if (!enabled) return;
     const element = ref.current;
     if (!element) return;
     const handleMouseMove = (e: MouseEvent) => {
@@ -213,19 +219,25 @@ export function useMagnetic(
       window.removeEventListener('mousemove', handleMouseMove);
       element.removeEventListener('mouseleave', handleMouseLeave);
     };
-  }, [ref, radius, setTransform]);
+  }, [ref, radius, setTransform, enabled]);
 
   return style;
 }
 
+/**
+ * useSquish — always called unconditionally.
+ * Pass enabled=false to no-op the effect without changing hook call count.
+ */
 export function useSquish(
   ref: React.RefObject<HTMLElement | null>,
-  config: Partial<SpringConfig> = {}
+  config: Partial<SpringConfig> = {},
+  enabled: boolean = true
 ) {
   const scale = useSpring({ from: 1, mass: 0.8, tension: 500, friction: 25, ...config });
   const y = useSpring({ from: 0, mass: 0.8, tension: 500, friction: 25, ...config });
 
   useEffect(() => {
+    if (!enabled) return;
     const element = ref.current;
     if (!element) return;
     const handlePointerDown = () => { scale.set(0.94); y.set(2); };
@@ -236,7 +248,7 @@ export function useSquish(
       element.removeEventListener('pointerdown', handlePointerDown);
       window.removeEventListener('pointerup', handlePointerUp);
     };
-  }, [ref, scale, y]);
+  }, [ref, scale, y, enabled]);
 
   return { transform: `scale(${scale.value}) translateY(${y.value}px)`, willChange: 'transform' } as React.CSSProperties;
 }

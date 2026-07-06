@@ -2,7 +2,8 @@
  * MOCHI UI — Spring Physics Engine v2.0
  * 
  * Mass-spring-damper physics for all animations.
- * Provides real physical feel with configurable mass, tension, and friction.
+ * Uses semi-implicit (symplectic) Euler integration which conserves
+ * energy in oscillating systems, unlike explicit Euler which drifts.
  */
 
 export interface SpringConfig {
@@ -151,8 +152,11 @@ export class SpringPhysics {
       const dampingForce = -friction * this.state.velocity;
       const acceleration = (springForce + dampingForce) / mass;
 
+      // Semi-implicit (symplectic) Euler: update velocity first, then position
+      // using the NEW velocity. This conserves energy in oscillating systems
+      // unlike explicit Euler which causes slow amplitude growth over time.
       this.state.velocity += acceleration * dt;
-      this.state.value += this.state.velocity * dt;
+      this.state.value += this.state.velocity * dt; // uses updated velocity ✓
 
       if (clamp) {
         const maxDisplacement = Math.abs(this.target) * 2;

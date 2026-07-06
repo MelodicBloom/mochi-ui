@@ -3,6 +3,10 @@
  *
  * Claymorphic text input with focus spring animation,
  * floating label, and validation states.
+ *
+ * onChange follows the native React.ChangeEventHandler<HTMLInputElement>
+ * signature for compatibility with form libraries (RHF, Formik, etc.).
+ * Use onValueChange for a convenience (value: string) callback.
  */
 
 'use client';
@@ -11,7 +15,7 @@ import React, { useRef, useState, useCallback } from 'react';
 import { useSpring, useReducedMotion } from '../lib/spring-hooks';
 import { SpringConfig } from '../lib/spring-physics';
 
-export interface ClayInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface ClayInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'size'> {
   label?: string;
   helperText?: string;
   error?: string;
@@ -19,7 +23,10 @@ export interface ClayInputProps extends Omit<React.InputHTMLAttributes<HTMLInput
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   floatingLabel?: boolean;
-  onChange: (value: string) => void;
+  /** Native event handler — compatible with React Hook Form, Formik, etc. */
+  onChange?: React.ChangeEventHandler<HTMLInputElement>;
+  /** Convenience callback that receives the string value directly. */
+  onValueChange?: (value: string) => void;
   springConfig?: Partial<SpringConfig>;
   size?: 'sm' | 'md' | 'lg';
   className?: string;
@@ -28,7 +35,7 @@ export interface ClayInputProps extends Omit<React.InputHTMLAttributes<HTMLInput
 
 export const ClayInput = React.forwardRef<HTMLInputElement, ClayInputProps>(
   ({ label, helperText, error, success = false, leftIcon, rightIcon, floatingLabel = true,
-     onChange, springConfig, size = 'md', className = '', wrapperClassName = '',
+     onChange, onValueChange, springConfig, size = 'md', className = '', wrapperClassName = '',
      value, placeholder, disabled, ...props }, forwardedRef) => {
     const inputRef = useRef<HTMLInputElement>(null);
     const [isFocused, setIsFocused] = useState(false);
@@ -56,8 +63,10 @@ export const ClayInput = React.forwardRef<HTMLInputElement, ClayInputProps>(
     }, [focusRing, props]);
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      onChange(e.target.value); setIsFilled(!!e.target.value);
-    }, [onChange]);
+      onChange?.(e);
+      onValueChange?.(e.target.value);
+      setIsFilled(!!e.target.value);
+    }, [onChange, onValueChange]);
 
     const sizeConfig = {
       sm: { padding: '0.5rem 0.75rem', fontSize: 'var(--mochi-text-sm)', height: '36px' },

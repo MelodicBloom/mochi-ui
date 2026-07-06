@@ -5,7 +5,7 @@
  * Surface treatments, edge definitions, and physical presence
  */
 
-@import './design-tokens.css';
+@import './tokens.css';
 
 /* ─── BASE CLAY SURFACE ─── */
 .clay-surface {

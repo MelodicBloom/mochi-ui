@@ -49,9 +49,10 @@ export const ClaySlider: React.FC<ClaySliderProps> = ({
   const thumbScale = useSpring({ from: 1, mass: 0.5, tension: 500, friction: 20, ...springConfig });
   const fillWidth = useSpring({ from: ((value - min) / (max - min)) * 100, mass: 1, tension: 300, friction: 28, ...springConfig });
 
+  // fillWidth added to deps — previously omitted, risking stale closure
   useEffect(() => {
     fillWidth.set(((value - min) / (max - min)) * 100);
-  }, [value, min, max]);
+  }, [value, min, max, fillWidth]);
 
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     onChange(Number(e.target.value));

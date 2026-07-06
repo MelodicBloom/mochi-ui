@@ -3,6 +3,12 @@
  *
  * Manages theme state (light/dark/system), persists to localStorage,
  * and applies data-theme + .dark class to the document root.
+ *
+ * SSR behaviour: renders children immediately (no visibility:hidden gate)
+ * and relies on suppressHydrationWarning on <html> to suppress the
+ * inevitable data-theme mismatch on first paint. A tiny blocking inline
+ * script in <head> can optionally be used to set the attribute before
+ * React hydrates to eliminate the flash entirely.
  */
 
 'use client';
@@ -84,8 +90,9 @@ export const ThemeProvider: React.FC<ThemeProviderProps> = ({
     setTheme(resolvedTheme === 'light' ? 'dark' : 'light');
   }, [resolvedTheme, setTheme]);
 
-  if (!mounted) return <div style={{ visibility: 'hidden' }}>{children}</div>;
-
+  // Render children immediately — no visibility:hidden gate.
+  // Add suppressHydrationWarning to your root <html> element to silence
+  // the data-theme SSR mismatch warning on first hydration.
   return (
     <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme }}>
       {children}

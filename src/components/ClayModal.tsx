@@ -7,7 +7,7 @@
 
 'use client';
 
-import React, { useRef, useEffect, useCallback } from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import { useSpring, useReducedMotion } from '../lib/spring-hooks';
 import { SpringConfig } from '../lib/spring-physics';
 
@@ -36,18 +36,29 @@ export const ClayModal: React.FC<ClayModalProps> = ({
   const prefersReducedMotion = useReducedMotion();
   const previousActiveElement = useRef<HTMLElement | null>(null);
 
-  const opacity = useSpring({ from: 0, mass: 1, tension: 300, friction: 30, ...springConfig });
+  // isMounted gates DOM presence. Set true immediately on open,
+  // set false only after the close animation fully settles (onRest).
+  // This decouples unmount timing from raw spring values, preventing
+  // the race condition where opacity.value is read synchronously during render.
+  const [isMounted, setIsMounted] = useState(isOpen);
+
+  const opacity = useSpring({
+    from: 0, mass: 1, tension: 300, friction: 30, ...springConfig,
+    onRest: () => { if (!isOpen) setIsMounted(false); },
+  });
   const scale = useSpring({ from: 0.9, mass: 1.2, tension: 250, friction: 24, ...springConfig });
   const translateY = useSpring({ from: 30, mass: 1, tension: 280, friction: 26, ...springConfig });
 
   useEffect(() => {
     if (isOpen) {
+      setIsMounted(true);
       previousActiveElement.current = document.activeElement as HTMLElement;
       opacity.set(1); scale.set(1); translateY.set(0);
       setTimeout(() => { closeButtonRef.current?.focus(); }, 100);
     } else {
       opacity.set(0); scale.set(0.95); translateY.set(20);
       previousActiveElement.current?.focus();
+      // isMounted will be cleared by the onRest callback above
     }
   }, [isOpen, opacity, scale, translateY]);
 
@@ -83,7 +94,8 @@ export const ClayModal: React.FC<ClayModalProps> = ({
     if (closeOnBackdrop && e.target === backdropRef.current) onClose();
   }, [closeOnBackdrop, onClose]);
 
-  if (!isOpen && opacity.value <= 0.01) return null;
+  // Gate on isMounted state — never on raw spring values
+  if (!isMounted) return null;
 
   return (
     <div
