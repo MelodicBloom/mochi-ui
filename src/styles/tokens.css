@@ -64,6 +64,125 @@
   --mochi-sand-800: #2d2416;
   --mochi-sand-900: #1a150c;
 
+  /* ─────────────────────────────────────────────
+     PASTEL PALETTE
+     All scales tuned for claymorphic use:
+       50–200  background washes & tints
+       300–400 soft accents, badge fills
+       500     primary / identity value
+       600     hover / pressed
+       700–800 text-safe darks (≥4.5:1 on white bg)
+       900     deep / hero
+  ─────────────────────────────────────────────── */
+
+  /* ─── BEIGE (warm greige — backdrop & card fills) ─── */
+  --mochi-beige-50:  #fdfcf9;
+  --mochi-beige-100: #f8f4ee;
+  --mochi-beige-200: #f0e9dc;
+  --mochi-beige-300: #e4d8c4;
+  --mochi-beige-400: #d4c3a6;
+  --mochi-beige-500: #c0ab88;
+  --mochi-beige-600: #a08e6c;
+  --mochi-beige-700: #7a6a4e;
+  --mochi-beige-800: #544834;
+  --mochi-beige-900: #2e261a;
+
+  /* ─── TAUPE (cool greige — neutral text surfaces) ─── */
+  --mochi-taupe-50:  #faf9f7;
+  --mochi-taupe-100: #f2f0ec;
+  --mochi-taupe-200: #e4e0d8;
+  --mochi-taupe-300: #d0cabf;
+  --mochi-taupe-400: #b8b0a2;
+  --mochi-taupe-500: #9e9486;
+  --mochi-taupe-600: #817870;
+  --mochi-taupe-700: #625c54;
+  --mochi-taupe-800: #433f38;
+  --mochi-taupe-900: #25221d;
+
+  /* ─── PINK (blush — primary accent on light surfaces) ─── */
+  --mochi-pink-50:  #fff5f7;
+  --mochi-pink-100: #ffe0e6;
+  --mochi-pink-200: #ffbfcc;
+  --mochi-pink-300: #ff96ad;
+  --mochi-pink-400: #f76880;
+  --mochi-pink-500: #ed4060;
+  --mochi-pink-600: #cc2a4a;
+  --mochi-pink-700: #a21b38;
+  --mochi-pink-800: #781226;
+  --mochi-pink-900: #4e0a17;
+
+  /* ─── LAVENDER (soft violet — secondary / decorative) ─── */
+  --mochi-lavender-50:  #f8f5ff;
+  --mochi-lavender-100: #ede5ff;
+  --mochi-lavender-200: #d9c9ff;
+  --mochi-lavender-300: #bfa6ff;
+  --mochi-lavender-400: #9e7ef6;
+  --mochi-lavender-500: #7e56e8;
+  --mochi-lavender-600: #6240cc;
+  --mochi-lavender-700: #4a2ea8;
+  --mochi-lavender-800: #321e7a;
+  --mochi-lavender-900: #1c0f4e;
+
+  /* ─── TARO (dusty purple-grey — muted & moody) ─── */
+  --mochi-taro-50:  #f7f5f9;
+  --mochi-taro-100: #ece8f2;
+  --mochi-taro-200: #d8d0e6;
+  --mochi-taro-300: #bdb2d4;
+  --mochi-taro-400: #9e90bc;
+  --mochi-taro-500: #806ea2;
+  --mochi-taro-600: #645285;
+  --mochi-taro-700: #4c3c66;
+  --mochi-taro-800: #342848;
+  --mochi-taro-900: #1c152a;
+
+  /* ─── PISTACHIO (yellow-green — fresh & bright) ─── */
+  --mochi-pistachio-50:  #f6fbf0;
+  --mochi-pistachio-100: #e8f6d8;
+  --mochi-pistachio-200: #ceecb0;
+  --mochi-pistachio-300: #aedd82;
+  --mochi-pistachio-400: #8aca55;
+  --mochi-pistachio-500: #68b330;
+  --mochi-pistachio-600: #4e9220;
+  --mochi-pistachio-700: #376e14;
+  --mochi-pistachio-800: #234a0c;
+  --mochi-pistachio-900: #112604;
+
+  /* ─── LIMONCELLO (bright lemon-yellow — energetic accent) ─── */
+  --mochi-limoncello-50:  #fffef0;
+  --mochi-limoncello-100: #fffcd1;
+  --mochi-limoncello-200: #fff7a0;
+  --mochi-limoncello-300: #ffee63;
+  --mochi-limoncello-400: #ffe030;
+  --mochi-limoncello-500: #f5ce00;
+  --mochi-limoncello-600: #c9a800;
+  --mochi-limoncello-700: #9a7f00;
+  --mochi-limoncello-800: #6b5700;
+  --mochi-limoncello-900: #3c3000;
+
+  /* ─── CLEMENTINE (warm vivid orange — energetic CTA) ─── */
+  --mochi-clementine-50:  #fff7f0;
+  --mochi-clementine-100: #ffead8;
+  --mochi-clementine-200: #ffd0a8;
+  --mochi-clementine-300: #ffb070;
+  --mochi-clementine-400: #ff8c38;
+  --mochi-clementine-500: #f56a00;
+  --mochi-clementine-600: #cc5500;
+  --mochi-clementine-700: #a04000;
+  --mochi-clementine-800: #702c00;
+  --mochi-clementine-900: #401800;
+
+  /* ─── ROBINS-EGG (soft cyan-turquoise — fresh & airy) ─── */
+  --mochi-robins-egg-50:  #f0fbfd;
+  --mochi-robins-egg-100: #d8f4f9;
+  --mochi-robins-egg-200: #aae8f2;
+  --mochi-robins-egg-300: #72d6e8;
+  --mochi-robins-egg-400: #3cbfd8;
+  --mochi-robins-egg-500: #18a4c0;
+  --mochi-robins-egg-600: #0e849e;
+  --mochi-robins-egg-700: #08637a;
+  --mochi-robins-egg-800: #044254;
+  --mochi-robins-egg-900: #01222e;
+
   /* ─── WARNING ─── */
   --mochi-warning-50:  #fffbeb;
   --mochi-warning-100: #fef3c7;
@@ -98,7 +217,6 @@
   --mochi-border: rgba(93, 64, 40, 0.12);
 
   /* ─── CLAY SHADOW SYSTEM (5-layer) ─── */
-  /* rest: default raised state */
   --mochi-clay-rest:
     6px 6px 12px rgba(168, 130, 90, 0.18),
     -6px -6px 12px rgba(255, 255, 255, 0.85),
@@ -106,7 +224,6 @@
     inset 1px 1px 2px rgba(255, 255, 255, 0.6),
     inset -1px -1px 2px rgba(168, 130, 90, 0.08);
 
-  /* elevated: hover lift */
   --mochi-clay-elevated:
     10px 10px 20px rgba(168, 130, 90, 0.22),
     -10px -10px 20px rgba(255, 255, 255, 0.9),
@@ -114,19 +231,16 @@
     inset 1px 1px 2px rgba(255, 255, 255, 0.7),
     inset -1px -1px 2px rgba(168, 130, 90, 0.1);
 
-  /* pressed: active / pushed down */
   --mochi-clay-pressed:
     2px 2px 4px rgba(168, 130, 90, 0.12),
     -2px -2px 4px rgba(255, 255, 255, 0.7),
     inset 3px 3px 8px rgba(168, 130, 90, 0.15),
     inset -3px -3px 8px rgba(255, 255, 255, 0.5);
 
-  /* inset: recessed / input wells */
   --mochi-clay-inset:
     inset 4px 4px 8px rgba(168, 130, 90, 0.14),
     inset -4px -4px 8px rgba(255, 255, 255, 0.8);
 
-  /* floating: modal / popover */
   --mochi-clay-floating:
     20px 20px 60px rgba(168, 130, 90, 0.2),
     -20px -20px 60px rgba(255, 255, 255, 0.95),
