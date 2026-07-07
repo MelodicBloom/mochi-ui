@@ -1,14 +1,20 @@
 /**
  * MOCHI UI — ClayToggle v2.0
+ *
+ * Fully controlled toggle (checked + onChange).
+ * Spring syncs whenever the external `checked` prop changes,
+ * fixing the previous stale-state bug where the thumb wouldn't
+ * animate when a parent flipped the prop without user interaction.
  */
 
 'use client';
 
-import React, { useRef, useCallback, useId } from 'react';
+import React, { useRef, useCallback, useId, useEffect } from 'react';
 import { useSpring, useReducedMotion } from '../lib/spring-hooks';
 import { SpringConfig } from '../lib/spring-physics';
 
 export interface ClayToggleProps {
+  /** Controlled checked state — component is fully controlled */
   checked: boolean;
   onChange: (checked: boolean) => void;
   label?: string;
@@ -21,11 +27,17 @@ export interface ClayToggleProps {
   uncheckedColor?: string;
 }
 
-function getThumbTravel(size: 'sm' | 'md' | 'lg'): number {
-  const widths = { sm: 40, md: 52, lg: 64 };
-  const thumbs = { sm: 18, md: 24, lg: 30 };
-  return widths[size] - thumbs[size] - 4;
-}
+const THUMB_TRAVEL: Record<string, number> = {
+  sm: 40 - 18 - 4,   // track - thumb - padding*2
+  md: 52 - 24 - 4,
+  lg: 64 - 30 - 4,
+};
+
+const SIZE_CONFIG = {
+  sm: { width: 40, height: 22, thumb: 18, padding: 2 },
+  md: { width: 52, height: 28, thumb: 24, padding: 2 },
+  lg: { width: 64, height: 34, thumb: 30, padding: 2 },
+};
 
 export const ClayToggle: React.FC<ClayToggleProps> = ({
   checked,
@@ -42,26 +54,27 @@ export const ClayToggle: React.FC<ClayToggleProps> = ({
   const id = useId();
   const prefersReducedMotion = useReducedMotion();
 
-  const thumbX = useSpring({ from: 0, mass: 0.8, tension: 400, friction: 22, ...springConfig });
+  const thumbX     = useSpring({ from: checked ? THUMB_TRAVEL[size] : 0, mass: 0.8, tension: 400, friction: 22, ...springConfig });
   const thumbScale = useSpring({ from: 1, mass: 0.5, tension: 500, friction: 20, ...springConfig });
 
-  React.useEffect(() => {
-    thumbX.set(checked ? getThumbTravel(size) : 0);
-  }, [checked, size]);
+  // Sync spring target whenever controlled `checked` or `size` changes.
+  // This was the source of the controlled/uncontrolled mismatch bug.
+  useEffect(() => {
+    thumbX.set(checked ? THUMB_TRAVEL[size] : 0);
+  }, [checked, size, thumbX]);
 
-  const sizeConfig = {
-    sm: { width: 40, height: 22, thumb: 18, padding: 2 },
-    md: { width: 52, height: 28, thumb: 24, padding: 2 },
-    lg: { width: 64, height: 34, thumb: 30, padding: 2 },
-  };
-  const cfg = sizeConfig[size];
+  const cfg = SIZE_CONFIG[size];
 
-  const handleClick = useCallback(() => { if (!disabled) onChange(!checked); }, [checked, disabled, onChange]);
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleClick(); } }, [handleClick]);
+  const handleClick    = useCallback(() => { if (!disabled) onChange(!checked); }, [checked, disabled, onChange]);
+  const handleKeyDown  = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); handleClick(); }
+  }, [handleClick]);
 
   const trackStyle: React.CSSProperties = {
     width: cfg.width, height: cfg.height,
-    background: checked ? `linear-gradient(145deg, var(--mochi-terra-400), ${checkedColor})` : uncheckedColor,
+    background: checked
+      ? `linear-gradient(145deg, var(--mochi-terra-400), ${checkedColor})`
+      : uncheckedColor,
     borderRadius: cfg.height / 2,
     boxShadow: checked ? 'inset 2px 2px 4px rgba(0,0,0,0.1)' : 'var(--mochi-clay-inset)',
     transition: prefersReducedMotion ? 'none' : 'background var(--mochi-duration-normal) var(--mochi-ease-default)',
@@ -79,7 +92,7 @@ export const ClayToggle: React.FC<ClayToggleProps> = ({
       className={className}
       style={trackStyle}
       onClick={handleClick} onKeyDown={handleKeyDown}
-      onPointerDown={() => thumbScale.set(0.9)}
+      onPointerDown={() => { if (!disabled) thumbScale.set(0.9); }}
       onPointerUp={() => thumbScale.set(1)}
       onPointerLeave={() => thumbScale.set(1)}
     >
@@ -96,10 +109,17 @@ export const ClayToggle: React.FC<ClayToggleProps> = ({
   if (!label) return toggleEl;
 
   return (
-    <label htmlFor={id} className={`inline-flex items-center gap-3 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}>
-      {labelPosition === 'left' && <span className="text-sm font-medium text-[var(--mochi-text-secondary)] select-none">{label}</span>}
+    <label
+      htmlFor={id}
+      className={`inline-flex items-center gap-3 cursor-pointer ${disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+    >
+      {labelPosition === 'left' && (
+        <span className="text-sm font-medium text-[var(--mochi-text-secondary)] select-none">{label}</span>
+      )}
       {toggleEl}
-      {labelPosition === 'right' && <span className="text-sm font-medium text-[var(--mochi-text-secondary)] select-none">{label}</span>}
+      {labelPosition === 'right' && (
+        <span className="text-sm font-medium text-[var(--mochi-text-secondary)] select-none">{label}</span>
+      )}
     </label>
   );
 };

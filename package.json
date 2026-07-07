@@ -7,39 +7,48 @@
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
+      "import":  "./dist/index.mjs",
       "require": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "types":   "./dist/index.d.ts"
+    },
+    "./physics": {
+      "import":  "./dist/physics.mjs",
+      "require": "./dist/physics.js",
+      "types":   "./dist/physics.d.ts"
     },
     "./styles": "./dist/styles.css"
   },
   "files": ["dist"],
   "sideEffects": ["./dist/styles.css"],
   "scripts": {
-    "prebuild": "npm run build:css",
-    "build": "tsup",
-    "build:css": "node scripts/build-css.js",
-    "dev": "tsup --watch",
-    "lint": "eslint src --ext .ts,.tsx",
-    "typecheck": "tsc --noEmit"
+    "prebuild":   "npm run build:css",
+    "build":      "tsup",
+    "build:css":  "node scripts/build-css.js",
+    "dev":        "tsup --watch",
+    "lint":       "eslint src --ext .ts,.tsx",
+    "typecheck":  "tsc --noEmit"
   },
   "peerDependencies": {
-    "react": ">=18.0.0",
-    "react-dom": ">=18.0.0"
+    "react":       ">=18.0.0",
+    "react-dom":   ">=18.0.0",
+    "tailwindcss": ">=3.0.0"
+  },
+  "peerDependenciesMeta": {
+    "tailwindcss": { "optional": false }
   },
   "devDependencies": {
-    "@types/react": "^18.2.0",
+    "@types/react":     "^18.2.0",
     "@types/react-dom": "^18.2.0",
-    "eslint": "^8.0.0",
-    "postcss": "^8.4.0",
-    "postcss-cli": "^11.0.0",
-    "tsup": "^8.0.0",
-    "typescript": "^5.3.0"
+    "eslint":           "^8.0.0",
+    "postcss":          "^8.4.0",
+    "postcss-cli":      "^11.0.0",
+    "tsup":             "^8.0.0",
+    "typescript":       "^5.3.0"
   },
   "keywords": ["claymorphism", "neumorphism", "design-system", "react", "spring-physics", "ui-components", "tailwind"],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/MelodicBloom/mochi-ui"
+    "url":  "https://github.com/MelodicBloom/mochi-ui"
   }
 }

@@ -1,8 +1,9 @@
 /**
  * MOCHI UI — ClaySegmentedControl v2.0
  *
- * Claymorphic segmented control with sliding indicator
- * and spring-physics selection animation.
+ * Key fix: options are now keyed on `${option.value}__${i}` to prevent
+ * React silently reusing the wrong DOM node when two options share the
+ * same value string (duplicate key warning + wrong indicator position).
  */
 
 'use client';
@@ -15,6 +16,7 @@ export interface SegmentedOption {
   value: string;
   label: string;
   icon?: React.ReactNode;
+  disabled?: boolean;
 }
 
 export interface ClaySegmentedControlProps {
@@ -50,8 +52,13 @@ export const ClaySegmentedControl: React.FC<ClaySegmentedControlProps> = ({
 
   useEffect(() => { updateIndicator(); }, [updateIndicator]);
   useEffect(() => {
+    const ro = new ResizeObserver(updateIndicator);
+    if (containerRef.current) ro.observe(containerRef.current);
     window.addEventListener('resize', updateIndicator);
-    return () => window.removeEventListener('resize', updateIndicator);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener('resize', updateIndicator);
+    };
   }, [updateIndicator]);
 
   const btnCls: Record<string, string> = {
@@ -63,14 +70,19 @@ export const ClaySegmentedControl: React.FC<ClaySegmentedControlProps> = ({
   return (
     <div
       ref={containerRef}
-      className={`relative inline-flex p-1 gap-1 rounded-[var(--mochi-radius-lg)] ${fullWidth ? 'w-full' : ''} ${className}`}
+      role="tablist"
+      className={`relative inline-flex p-1 gap-1 rounded-[var(--mochi-radius-lg)] ${
+        fullWidth ? 'w-full' : ''
+      } ${className}`}
       style={{ background: 'var(--mochi-surface-inset)', boxShadow: 'var(--mochi-clay-inset)' }}
     >
+      {/* Sliding spring indicator */}
       <div
+        aria-hidden="true"
         style={{
           position: 'absolute', top: 4,
-          left: `${indicatorX.value}px`,
-          width: `${indicatorW.value}px`,
+          left: indicatorX.value,
+          width: indicatorW.value,
           height: 'calc(100% - 8px)',
           borderRadius: 'calc(var(--mochi-radius-lg) - 4px)',
           background: 'linear-gradient(145deg, var(--mochi-surface-elevated), var(--mochi-surface))',
@@ -79,16 +91,28 @@ export const ClaySegmentedControl: React.FC<ClaySegmentedControlProps> = ({
           transition: prefersReducedMotion ? 'none' : undefined,
         }}
       />
-      {options.map((option) => {
-        const isActive = option.value === value;
+      {options.map((option, i) => {
+        const isActive   = option.value === value;
+        const isDisabled = option.disabled ?? false;
         return (
           <button
-            key={option.value}
+            key={`${option.value}__${i}`}
+            role="tab"
+            aria-selected={isActive}
             data-segment
-            onClick={() => onChange(option.value)}
-            className={`relative z-10 inline-flex items-center justify-center gap-1.5 font-medium border-none bg-transparent cursor-pointer rounded-[calc(var(--mochi-radius-lg)-4px)] transition-colors duration-150 ${btnCls[size]} ${fullWidth ? 'flex-1' : ''} ${isActive ? 'text-[var(--mochi-text-primary)]' : 'text-[var(--mochi-text-tertiary)] hover:text-[var(--mochi-text-secondary)]'}`}
+            disabled={isDisabled}
+            onClick={() => { if (!isDisabled) onChange(option.value); }}
+            className={`relative z-10 inline-flex items-center justify-center gap-1.5 font-medium
+              border-none bg-transparent cursor-pointer rounded-[calc(var(--mochi-radius-lg)-4px)]
+              transition-colors duration-150 ${
+              btnCls[size]} ${
+              fullWidth ? 'flex-1' : ''} ${
+              isActive   ? 'text-[var(--mochi-text-primary)]'   : ''} ${
+              isDisabled ? 'opacity-40 cursor-not-allowed'       : 'text-[var(--mochi-text-tertiary)] hover:text-[var(--mochi-text-secondary)]'
+            }`}
           >
-            {option.icon}{option.label}
+            {option.icon}
+            {option.label}
           </button>
         );
       })}
