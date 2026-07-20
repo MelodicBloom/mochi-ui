@@ -11,15 +11,17 @@ interface ResponsiveContextType {
   isPointerFine: boolean;
 }
 
-const ResponsiveContext = createContext<ResponsiveContextType>({
-  containerWidth: 0,
-  containerHeight: 0,
+const defaultState: ResponsiveContextType = {
+  containerWidth: 1024,
+  containerHeight: 768,
   breakpoint: 'desktop',
   prefersReducedMotion: false,
   prefersReducedTransparency: false,
   isTouch: false,
   isPointerFine: true,
-});
+};
+
+const ResponsiveContext = createContext<ResponsiveContextType>(defaultState);
 
 export const useResponsive = () => useContext(ResponsiveContext);
 
@@ -58,21 +60,18 @@ export const fluidSpace = (minSize: number, maxSize: number) => {
   return fluidType(minSize, maxSize, 320, 1440);
 };
 
-// Responsive Provider
+// Responsive Provider - SSR-safe
 export const ResponsiveProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [state, setState] = useState<ResponsiveContextType>({
-    containerWidth: window.innerWidth,
-    containerHeight: window.innerHeight,
-    breakpoint: 'desktop',
-    prefersReducedMotion: false,
-    prefersReducedTransparency: false,
-    isTouch: false,
-    isPointerFine: true,
-  });
+  // Initialize with safe default values (no window access)
+  const [state, setState] = useState<ResponsiveContextType>(defaultState);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    // Only run on client-side after hydration
     const updateState = () => {
-      const w = window.innerWidth;
+      const w = typeof window !== 'undefined' ? window.innerWidth : 1024;
+      const h = typeof window !== 'undefined' ? window.innerHeight : 768;
+      
       let bp: ResponsiveContextType['breakpoint'] = 'desktop';
 
       if (w < 320) bp = 'micro';
@@ -84,15 +83,16 @@ export const ResponsiveProvider: React.FC<{ children: React.ReactNode }> = ({ ch
 
       setState({
         containerWidth: w,
-        containerHeight: window.innerHeight,
+        containerHeight: h,
         breakpoint: bp,
-        prefersReducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
-        prefersReducedTransparency: window.matchMedia('(prefers-reduced-transparency: reduce)').matches,
-        isTouch: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
-        isPointerFine: window.matchMedia('(pointer: fine)').matches,
+        prefersReducedMotion: typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-motion: reduce)').matches : false,
+        prefersReducedTransparency: typeof window !== 'undefined' ? window.matchMedia('(prefers-reduced-transparency: reduce)').matches : false,
+        isTouch: typeof window !== 'undefined' ? ('ontouchstart' in window || navigator.maxTouchPoints > 0) : false,
+        isPointerFine: typeof window !== 'undefined' ? window.matchMedia('(pointer: fine)').matches : true,
       });
     };
 
+    setIsMounted(true);
     updateState();
     window.addEventListener('resize', updateState);
 
