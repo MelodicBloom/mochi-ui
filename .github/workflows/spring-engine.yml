@@ -1,0 +1,48 @@
+name: Verify independent spring engine
+
+on:
+  pull_request:
+    paths:
+      - 'packages/spring-engine/**'
+      - '.github/workflows/spring-engine.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spring-engine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Frozen root install
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Typecheck isolated package
+        run: npx tsc -p packages/spring-engine/tsconfig.json --noEmit
+
+      - name: Build isolated package
+        run: npx tsc -p packages/spring-engine/tsconfig.build.json
+
+      - name: Run engine contract tests
+        run: node --test packages/spring-engine/test/*.test.mjs
+
+      - name: Enforce runtime dependency boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const pkg = require('./packages/spring-engine/package.json');
+          const runtime = Object.keys(pkg.dependencies || {});
+          if (runtime.length > 0) {
+            throw new Error(`Spring engine must remain runtime dependency-free: ${runtime.join(', ')}`);
+          }
+          NODE
