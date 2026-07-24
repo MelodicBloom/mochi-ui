@@ -57,13 +57,22 @@ export const SPRING_PRESETS = Object.freeze({
   bouncy: { stiffness: 240, damping: 14, mass: 0.8 },
 } as const);
 
+const NUMERIC_CONFIG_KEYS = [
+  'stiffness',
+  'damping',
+  'mass',
+  'restSpeed',
+  'restDelta',
+  'maxStepMs',
+] as const satisfies readonly (keyof SpringConfig)[];
+
 export function resolveSpringConfig(
   config: Partial<SpringConfig> = {},
 ): SpringConfig {
-  const resolved = { ...DEFAULT_SPRING_CONFIG, ...config };
+  const resolved: SpringConfig = { ...DEFAULT_SPRING_CONFIG, ...config };
 
-  for (const [key, value] of Object.entries(resolved)) {
-    if (key === 'overshootClamping') continue;
+  for (const key of NUMERIC_CONFIG_KEYS) {
+    const value = resolved[key];
     if (!Number.isFinite(value) || value <= 0) {
       throw new RangeError(`Spring ${key} must be a finite number greater than zero.`);
     }
@@ -102,8 +111,9 @@ export function stepSpring(
   }
 
   const resolved = resolveSpringConfig(config);
-  if (deltaMs === 0 || isSpringSettled(state, target, resolved)) {
-    return isSpringSettled(state, target, resolved)
+  const alreadySettled = isSpringSettled(state, target, resolved);
+  if (deltaMs === 0 || alreadySettled) {
+    return alreadySettled
       ? { value: target, velocity: 0 }
       : { ...state };
   }
