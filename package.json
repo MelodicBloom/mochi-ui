@@ -9,26 +9,37 @@
     "preview": "astro preview",
     "tokens": "node scripts/build-tokens.js",
     "tokens:expand": "node scripts/expand-tokens.js",
-    "astro": "astro"
+    "astro": "astro",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build -o storybook-static",
+    "build:pages": "astro build && storybook build -o dist/storybook",
+    "pkg:build": "npm --prefix packages/mochi-ui run build",
+    "pkg:pack": "npm --prefix packages/mochi-ui run build && cd packages/mochi-ui && npm pack --dry-run"
   },
   "dependencies": {
-    "astro": "^5.7.0",
     "@astrojs/react": "^4.2.0",
+    "@react-three/drei": "^10.0.0",
+    "@react-three/fiber": "^9.0.0",
+    "@react-three/postprocessing": "^3.0.0",
+    "astro": "^5.7.0",
+    "gsap": "^3.13.0",
+    "lenis": "^1.1.0",
+    "motion": "^12.9.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "motion": "^12.9.0",
-    "three": "^0.165.0",
-    "@react-three/fiber": "^9.0.0",
-    "@react-three/drei": "^10.0.0",
-    "@react-three/postprocessing": "^3.0.0",
-    "gsap": "^3.13.0",
-    "lenis": "^1.1.0"
+    "three": "^0.165.0"
   },
   "devDependencies": {
-    "typescript": "^5.8.0",
-    "@types/three": "^0.165.0",
+    "@storybook/addon-essentials": "^8.6.14",
+    "@storybook/blocks": "^8.6.14",
+    "@storybook/react": "^8.6.19",
+    "@storybook/react-vite": "^8.6.19",
     "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0"
+    "@types/react-dom": "^19.0.0",
+    "@types/three": "^0.165.0",
+    "storybook": "^8.6.19",
+    "tsup": "^8.5.1",
+    "typescript": "^5.8.0"
   },
   "engines": {
     "node": ">=20.0.0"
