@@ -197,7 +197,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
       <section id="hero" style={{ padding: '0 24px 48px', position: 'relative', overflow: 'hidden' }}>
         {/* Clay blob background */}
         <img
-          src="/assets/hero-bg.svg"
+          src={`${import.meta.env.BASE_URL}assets/hero-bg.svg`}
           alt=""
           aria-hidden="true"
           style={{
@@ -432,7 +432,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
                       }}
                     >
                       <img
-                        src={`/assets/thumbs/${t.file}`}
+                        src={`${import.meta.env.BASE_URL}assets/thumbs/${t.file}`}
                         alt={`${t.label} component preview`}
                         style={{ width: '100%', display: 'block', aspectRatio: '1 / 1', objectFit: 'cover' }}
                         loading="lazy"
@@ -456,7 +456,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
                 {(['default', 'hover', 'pressed', 'disabled'] as const).map((state) => (
                   <div key={state} style={{ borderRadius: 16, overflow: 'hidden', background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)' }}>
                     <img
-                      src={`/assets/cta/cta-${state}.svg`}
+                      src={`${import.meta.env.BASE_URL}assets/cta/cta-${state}.svg`}
                       alt={`CTA button ${state} state`}
                       style={{ width: '100%', display: 'block' }}
                       loading="lazy"
@@ -520,13 +520,13 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
 
           {/* Asset pack download CTA */}
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: 10, padding: '12px 24px', borderRadius: 16, background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)', marginBottom: 28 }}>
-            <img src="/assets/pack-cover.svg" alt="" aria-hidden="true" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover' }} />
+            <img src={`${import.meta.env.BASE_URL}assets/pack-cover.svg`} alt="" aria-hidden="true" style={{ width: 36, height: 36, borderRadius: 8, objectFit: 'cover' }} />
             <div style={{ textAlign: 'left' }}>
               <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--text-primary)' }}>Mochi UI Asset Pack</div>
               <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>21 SVG files · MIT License</div>
             </div>
             <a
-              href="/assets/asset-manifest.json"
+              href={`${import.meta.env.BASE_URL}assets/asset-manifest.json`}
               download
               onClick={() => audio.success()}
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, background: 'var(--mochi-mint)', color: 'white', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}
