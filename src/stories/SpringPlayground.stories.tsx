@@ -7,6 +7,10 @@ const meta: Meta<typeof SpringPlayground> = {
   tags: ['autodocs'],
   parameters: { layout: 'padded' },
   args: { initialStiffness: 240, initialDamping: 22, initialMass: 1.1 },
+  // SpringPlayground only reads initial* on mount; remount when Controls change them.
+  render: (args) => (
+    <SpringPlayground key={`${args.initialStiffness}-${args.initialDamping}-${args.initialMass}`} {...args} />
+  ),
 };
 export default meta;
 type Story = StoryObj<typeof SpringPlayground>;

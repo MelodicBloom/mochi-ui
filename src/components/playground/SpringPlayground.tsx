@@ -34,9 +34,23 @@ export function dampingRatio({ stiffness, damping, mass }: Params): number {
   return damping / (2 * Math.sqrt(stiffness * mass));
 }
 
+/**
+ * Semi-implicit Euler is only stable while dt stays well under both √(m/k) and m/c.
+ * The sliders allow e.g. mass 0.1 + damping 80, where the engine default (1/120 s)
+ * diverges, so pick an integration step that is stable for the current params.
+ */
+export function stableStepSeconds({ stiffness, damping, mass }: Params): number {
+  const limit = 0.5 * Math.min(Math.sqrt(mass / stiffness), damping > 0 ? mass / damping : Infinity);
+  return Math.min(1 / 120, limit);
+}
+
+function withStableStep(p: Params) {
+  return { ...p, maxStepSeconds: stableStepSeconds(p) };
+}
+
 /** Precompute a 1.5s step response for the curve plot (deterministic). */
 function sampleCurve(p: Params, seconds = 1.5, n = 180): number[] {
-  const s = new SpringValue(0, p);
+  const s = new SpringValue(0, withStableStep(p));
   s.setTarget(1);
   const out: number[] = [0];
   for (let i = 1; i <= n; i++) out.push(s.advance(seconds / n).value);
@@ -78,7 +92,7 @@ export const SpringPlayground: React.FC<SpringPlaygroundProps> = ({
 
   // One spring drives "squish" (0 = rest, 1 = fully pressed; overshoot = rebound).
   useEffect(() => {
-    const spring = new SpringValue(0, p);
+    const spring = new SpringValue(0, withStableStep(p));
     springRef.current = spring;
     const runner = new SpringRunner(spring, createBrowserAnimationClock(), { immediate: reduced });
     runnerRef.current = runner;
@@ -94,7 +108,7 @@ export const SpringPlayground: React.FC<SpringPlaygroundProps> = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { springRef.current?.setConfig(p); }, [p]);
+  useEffect(() => { springRef.current?.setConfig(withStableStep(p)); }, [p]);
   useEffect(() => { runnerRef.current?.setImmediate(reduced); }, [reduced]);
 
   const kick = (target: number) => {
@@ -102,10 +116,8 @@ export const SpringPlayground: React.FC<SpringPlaygroundProps> = ({
     runnerRef.current?.start();
   };
 
-  const poke = () => {
-    kick(1);
-    window.setTimeout(() => kick(0), reduced ? 0 : 140);
-  };
+  const press = () => { setPressed(true); kick(1); };
+  const release = () => { setPressed(false); kick(0); };
 
   const zeta = dampingRatio(p);
   const curve = useMemo(() => sampleCurve(p), [p]);
@@ -117,7 +129,8 @@ export const SpringPlayground: React.FC<SpringPlaygroundProps> = ({
   return (
     <div
       className="clay-surface"
-      style={{ padding: 32, display: 'grid', gap: 24, gridTemplateColumns: 'minmax(260px, 1fr) minmax(280px, 1fr)', maxWidth: 860, background: '#fbf6f0' }}
+      // auto-fit collapses to one column below ~628px (2×280 + gap + padding) and keeps two columns above.
+      style={{ padding: 32, display: 'grid', gap: 24, gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 280px), 1fr))', width: '100%', maxWidth: 860, boxSizing: 'border-box', background: '#fbf6f0' }}
     >
       <div style={{ display: 'grid', placeItems: 'center', minHeight: 280 }}>
         <button
@@ -125,10 +138,17 @@ export const SpringPlayground: React.FC<SpringPlaygroundProps> = ({
           type="button"
           aria-label="Squish the clay blob"
           aria-pressed={pressed}
-          onPointerDown={() => { setPressed(true); kick(1); }}
-          onPointerUp={() => { setPressed(false); kick(0); }}
-          onPointerLeave={() => { if (pressed) { setPressed(false); kick(0); } }}
-          onKeyDown={(e) => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); poke(); } }}
+          onPointerDown={press}
+          onPointerUp={release}
+          onPointerLeave={() => { if (pressed) release(); }}
+          onKeyDown={(e) => {
+            if (e.key !== ' ' && e.key !== 'Enter') return;
+            e.preventDefault();
+            if (e.repeat || pressed) return;
+            press();
+          }}
+          onKeyUp={(e) => { if ((e.key === ' ' || e.key === 'Enter') && pressed) { e.preventDefault(); release(); } }}
+          onBlur={() => { if (pressed) release(); }}
           style={{
             width: 180, height: 180, border: 'none', cursor: 'pointer',
             borderRadius: '48% 48% 44% 52%',
