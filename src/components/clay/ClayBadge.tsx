@@ -31,7 +31,7 @@ export const ClayBadge: React.FC<ClayBadgeProps> = ({
   children, colorway = 'mint', size = 'md',
   pulse = false, dot = false, onClick, style, className,
 }) => {
-  const tokens = colorwayTokens[colorway];
+  const tokens = colorwayTokens[colorway] ?? colorwayTokens.neutral;
   const dims   = sizes[size];
 
   return (

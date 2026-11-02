@@ -39,7 +39,7 @@ export const AudioWorkletProvider: React.FC<{ children: React.ReactNode }> = ({ 
       audioCtxRef.current = ctx;
 
       // Load and register AudioWorklet processor
-      await ctx.audioWorklet.addModule('/assets/ClaySoundProcessor.js');
+      await ctx.audioWorklet.addModule(`${import.meta.env.BASE_URL}assets/ClaySoundProcessor.js`);
 
       // Create worklet node
       const workletNode = new AudioWorkletNode(ctx, 'clay-sound-processor', {
