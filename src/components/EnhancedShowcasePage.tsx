@@ -96,10 +96,10 @@ const FEATURES: Array<{
   desc: string;
   color: string;
 }> = [
-  { iconName: 'sun',      title: 'Spring Physics',    desc: 'Mass-spring-damper physics power every animation. No cubic-bezier guessing.',              color: 'mint'     },
-  { iconName: 'chart',    title: '30+ Components',    desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.',             color: 'blue'     },
-  { iconName: 'calendar', title: 'Figma Compatible',  desc: 'Design tokens map 1:1 between Figma variables and CSS custom properties.',                  color: 'pink'     },
-  { iconName: 'bell',     title: 'A11y Built-In',     desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.',                 color: 'lavender' },
+  { iconName: 'sun',      title: 'Spring Physics',    desc: 'Explore spring presets with editable mass, stiffness, and damping.',              color: 'mint'     },
+  { iconName: 'chart',    title: 'Component Examples',    desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.',             color: 'blue'     },
+  { iconName: 'calendar', title: 'Design Tokens',  desc: 'Explore the color, surface, and motion values used by this showcase.',                  color: 'pink'     },
+  { iconName: 'bell',     title: 'Accessibility Features',     desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.',                 color: 'lavender' },
   { iconName: 'copy',     title: 'TypeScript Native', desc: 'Fully typed props, strict inference, and IntelliSense-friendly APIs.',                       color: 'peach'    },
   { iconName: 'moon',     title: 'Dark Mode',         desc: 'Automatic theme switching with CSS custom properties and localStorage persistence.',         color: 'neutral'  },
 ];
@@ -229,14 +229,14 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
             subheadline={
               <ParallaxLayer speed={0.18}>
                 <p style={{ fontSize: 'clamp(1rem, 2vw, 1.2rem)', color: 'var(--text-secondary)', maxWidth: 520, lineHeight: 1.7, margin: '20px 0 28px' }}>
-                  Mochi UI is a modern React component library built around claymorphism — soft, tactile interfaces with spring physics, haptic feedback, and accessible design tokens.
+                  Mochi UI is an experimental React component showcase built around claymorphism — soft surfaces, spring interactions, and editable design tokens.
                 </p>
               </ParallaxLayer>
             }
             cta={
               <div style={{ display: 'flex', gap: 16, flexWrap: 'wrap' }}>
                 <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); scrollTo('playground'); }}>Open Playground</ClayButton>
-                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>View on GitHub</ClayButton>
+                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); window.open('https://github.com/MelodicBloom/mochi-ui', '_blank'); }}>View on GitHub</ClayButton>
               </div>
             }
           />
@@ -272,9 +272,9 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
             </ScrollReveal>
             <ScrollReveal delay={0.15}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <ClayCard colorway="mint" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Zap /></div><div><div style={{ fontWeight: 600 }}>Spring Physics</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Every interaction uses real mass and damping</div></div></div></ClayCard>
-                <ClayCard colorway="blue" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Accessibility /></div><div><div style={{ fontWeight: 600 }}>Accessibility First</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>WCAG 2.1 AA compliant with reduced motion support</div></div></div></ClayCard>
-                <ClayCard colorway="pink" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-blossom)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Palette /></div><div><div style={{ fontWeight: 600 }}>Design Tokens</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Figma-ready variables with automatic dark mode</div></div></div></ClayCard>
+                <ClayCard colorway="mint" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Zap /></div><div><div style={{ fontWeight: 600 }}>Spring Physics</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Explore how spring parameters change the preview response</div></div></div></ClayCard>
+                <ClayCard colorway="blue" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Accessibility /></div><div><div style={{ fontWeight: 600 }}>Accessibility First</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Keyboard and reduced-motion features; full accessibility audit pending</div></div></div></ClayCard>
+                <ClayCard colorway="pink" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-blossom)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Palette /></div><div><div style={{ fontWeight: 600 }}>Design Tokens</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Color and surface variables with light and dark themes</div></div></div></ClayCard>
               </div>
             </ScrollReveal>
           </div>
@@ -283,7 +283,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
         {/* ── FEATURES ───────────────────────────────────────────────────────── */}
         <section id="features" style={{ padding: '80px 0' }}>
           <ScrollReveal>
-            <SectionHeading reducedMotion={prefersReducedMotion} title="Everything you need to ship faster" subtitle="Mochi UI combines a comprehensive component library with production-ready tooling for design systems, product teams, and indie developers." />
+            <SectionHeading reducedMotion={prefersReducedMotion} title="Explore the component system" subtitle="Explore component examples and interaction controls, then inspect the source to assess their fit for your project." />
           </ScrollReveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 24 }}>
             {FEATURES.map((f, i) => (
@@ -309,7 +309,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
         {/* ── COMPONENTS ─────────────────────────────────────────────────────── */}
         <section id="components" style={{ padding: '80px 0' }}>
           <ScrollReveal>
-            <SectionHeading reducedMotion={prefersReducedMotion} title="Production-ready components" subtitle="Not just demos — real components you can drop into your next project. Every element is optimized for performance, accessibility, and delightful interaction." />
+            <SectionHeading reducedMotion={prefersReducedMotion} title="Component specimens" subtitle="Interactive examples to inspect and adapt. Dashboard values are illustrative sample data. Validate accessibility, performance, and compatibility in your own project before use." />
           </ScrollReveal>
 
           <ScrollReveal delay={0.1}>
@@ -402,7 +402,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
             <SectionHeading
               reducedMotion={prefersReducedMotion}
               title="Visual asset pack"
-              subtitle="21 production-ready SVGs — clay icon pills, component thumbnails, hero backgrounds, and CTA button states. All MIT licensed and tree-shakeable."
+              subtitle="21 MIT-licensed SVG assets — clay icon pills, component thumbnails, hero backgrounds, and CTA button states. Inspect individual files in the repository."
             />
           </ScrollReveal>
 
@@ -471,11 +471,11 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
         {/* ── FOR TEAMS ──────────────────────────────────────────────────────── */}
         <section id="teams" style={{ padding: '80px 0' }}>
           <ScrollReveal>
-            <SectionHeading reducedMotion={prefersReducedMotion} title="Built for every team" subtitle="Whether you are a designer sketching in Figma or a developer shipping to production, Mochi UI fits your workflow." />
+            <SectionHeading reducedMotion={prefersReducedMotion} title="For designers and developers" subtitle="Inspect the examples, compare interaction choices, and adapt the source for a scoped trial." />
           </ScrollReveal>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 32 }}>
-            <ScrollReveal delay={0.1}><ClayCard colorway="blue"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Figma /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Designers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['Figma variable library with 1:1 token mapping', 'Auto-layout components that mirror React props', 'Dark mode preview baked into every frame', 'Accessibility annotations for WCAG compliance'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
-            <ScrollReveal delay={0.2}><ClayCard colorway="mint"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Code /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Developers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['Tree-shakeable ESM exports with zero runtime overhead', 'TypeScript-native with strict prop inference', 'CSS custom properties for instant theming', 'SSR-friendly with Astro, Next.js, and Remix'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
+            <ScrollReveal delay={0.1}><ClayCard colorway="blue"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Figma /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Designers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['Color and surface tokens in source', 'Component states to inspect and adapt', 'Light and dark theme examples', 'Review contrast and interaction in your project'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
+            <ScrollReveal delay={0.2}><ClayCard colorway="mint"><div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}><div style={{ width: 44, height: 44, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Code /></div><h3 style={{ fontSize: 18, fontWeight: 700 }}>For Developers</h3></div><ul style={{ display: 'flex', flexDirection: 'column', gap: 10, padding: 0, listStyle: 'none' }}>{['React components available in source', 'TypeScript component props', 'CSS custom properties for theming', 'Astro showcase with React islands'].map(item => (<li key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: 8, fontSize: 14, color: 'var(--text-secondary)' }}><span style={{ color: 'var(--mochi-mint)', fontWeight: 700, flexShrink: 0 }}>✓</span>{item}</li>))}</ul></ClayCard></ScrollReveal>
           </div>
         </section>
 
@@ -484,22 +484,19 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
           <ScrollReveal>
             <div style={{ maxWidth: 640, margin: '0 auto', textAlign: 'center', padding: '64px 32px', borderRadius: 28, background: 'var(--bg-card)', boxShadow: 'var(--shadow-clay)' }}>
               <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2rem)', fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Ready to build something soft?</h2>
-              <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>Install Mochi UI in seconds and start building claymorphic interfaces with spring physics, haptic feedback, and accessible components.</p>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '14px 20px', borderRadius: 16, background: 'var(--bg-surface)', boxShadow: 'inset 3px 3px 6px rgba(0,0,0,0.06), inset -3px -3px 6px rgba(255,255,255,0.8)', fontFamily: 'monospace', fontSize: 14, marginBottom: 32, textAlign: 'left', justifyContent: 'space-between' }}>
-                <code>npm install @mochi-ui/react</code>
-                <button onClick={() => { navigator.clipboard.writeText('npm install @mochi-ui/react'); audio.success(); }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: 13 }}>Copy</button>
-              </div>
+              <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>Run the showcase from source. The repository includes setup instructions and the components demonstrated above.</p>
               <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); window.open('https://github.com/qt314wink/mochi-ui', '_blank'); }}>Get Started</ClayButton>
-                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); setShowModal(true); }}>Read Docs</ClayButton>
+                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); window.open('https://github.com/MelodicBloom/mochi-ui', '_blank'); }}>View source</ClayButton>
+                <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); setShowModal(true); }}>Setup notes</ClayButton>
               </div>
             </div>
           </ScrollReveal>
         </section>
 
-        <ClayModal isOpen={showModal} onClose={() => { audio.pop(); setShowModal(false); }} title="Documentation" size="md">
+        <ClayModal isOpen={showModal} onClose={() => { audio.pop(); setShowModal(false); }} title="Source and setup" size="md">
           <div style={{ padding: 24 }}>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>The docs site is deploying to Vercel. In the meantime, the live playground above is the fastest way to explore the system and feel each spring preset before you install.</p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Read the repository README for setup instructions, or explore the live playground to inspect the component and spring examples.</p>
+            <p style={{ marginBottom: 24 }}><a href="https://github.com/MelodicBloom/mochi-ui#readme" target="_blank" rel="noopener noreferrer">Open source and setup instructions</a></p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
               <ClayButton colorway="neutral" onClick={() => { audio.pop(); setShowModal(false); }}>Close</ClayButton>
               <ClayButton colorway="mint" onClick={() => { audio.success(); scrollTo('playground'); setShowModal(false); }}>Open Playground</ClayButton>
@@ -515,7 +512,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
             {['Home', 'About', 'Features', 'Playground', 'Components', 'Assets'].map(label => (
               <a key={label} href={`#${label.toLowerCase()}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>{label}</a>
             ))}
-            <a href="https://github.com/qt314wink/mochi-ui" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>GitHub</a>
+            <a href="https://github.com/MelodicBloom/mochi-ui" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>GitHub</a>
           </div>
 
           {/* Asset pack download CTA */}
@@ -531,7 +528,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
               onClick={() => audio.success()}
               style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '7px 14px', borderRadius: 10, background: 'var(--mochi-mint)', color: 'white', textDecoration: 'none', fontSize: 13, fontWeight: 600 }}
             >
-              <Icons.Download /> Download
+              <Icons.Download /> Download manifest
             </a>
           </div>
 
