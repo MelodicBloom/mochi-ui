@@ -40,6 +40,9 @@
       "optional": true
     }
   },
+  "overrides": {
+    "postprocessing": "6.36.6"
+  },
   "engines": {
     "node": ">=20.0.0"
   }
