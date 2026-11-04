@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, useSpring, useTransform } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayCardProps {
   children: React.ReactNode;
@@ -24,7 +25,7 @@ const colorwayBg = {
   ivory: '#FEF3C7',
 };
 
-export const ClayCard: React.FC<ClayCardProps> = ({
+const ClayCardBase: React.FC<ClayCardProps> = ({
   children,
   variant = 'default',
   colorway = 'neutral',
@@ -142,5 +143,7 @@ export const ClayCard: React.FC<ClayCardProps> = ({
     </motion.div>
   );
 };
+
+export const ClayCard = withClayReducedMotion(ClayCardBase, 'ClayCard');
 
 export default ClayCard;

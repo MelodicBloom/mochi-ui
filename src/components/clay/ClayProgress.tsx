@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayProgressProps {
   value: number;
@@ -25,7 +26,7 @@ const sizes = {
   lg: { height: 20, fontSize: 14 },
 };
 
-export const ClayProgress: React.FC<ClayProgressProps> = ({
+const ClayProgressBase: React.FC<ClayProgressProps> = ({
   value,
   max = 100,
   colorway = 'mint',
@@ -107,5 +108,7 @@ export const ClayProgress: React.FC<ClayProgressProps> = ({
     </div>
   );
 };
+
+export const ClayProgress = withClayReducedMotion(ClayProgressBase, 'ClayProgress');
 
 export default ClayProgress;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClaySegmentedControlProps {
   options: { value: string; label: string; icon?: React.ReactNode }[];
@@ -17,7 +18,7 @@ const colorwayBg = {
   neutral: 'hsl(30deg 20% 92%)',
 };
 
-export const ClaySegmentedControl: React.FC<ClaySegmentedControlProps> = ({
+const ClaySegmentedControlBase: React.FC<ClaySegmentedControlProps> = ({
   options,
   value: controlledValue,
   onChange,
@@ -92,5 +93,7 @@ export const ClaySegmentedControl: React.FC<ClaySegmentedControlProps> = ({
     </div>
   );
 };
+
+export const ClaySegmentedControl = withClayReducedMotion(ClaySegmentedControlBase, 'ClaySegmentedControl');
 
 export default ClaySegmentedControl;

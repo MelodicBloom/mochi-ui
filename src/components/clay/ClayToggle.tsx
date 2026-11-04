@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 import { motion, useSpring, useTransform } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayToggleProps {
   checked?: boolean;
@@ -23,7 +24,7 @@ const sizes = {
   lg: { width: 80, height: 44, knob: 36 },
 };
 
-export const ClayToggle: React.FC<ClayToggleProps> = ({
+const ClayToggleBase: React.FC<ClayToggleProps> = ({
   checked: controlledChecked,
   onChange,
   colorway = 'mint',
@@ -126,5 +127,7 @@ export const ClayToggle: React.FC<ClayToggleProps> = ({
     </div>
   );
 };
+
+export const ClayToggle = withClayReducedMotion(ClayToggleBase, 'ClayToggle');
 
 export default ClayToggle;
