@@ -16,6 +16,11 @@ export { ClayModal, type ClayModalProps } from './clay/ClayModal';
 export { ClaySkeleton, type ClaySkeletonProps } from './clay/ClaySkeleton';
 export { ClayProgress, type ClayProgressProps } from './clay/ClayProgress';
 export { ClaySegmentedControl, type ClaySegmentedControlProps } from './clay/ClaySegmentedControl';
+export { ClayCheckbox, type ClayCheckboxProps } from './clay/ClayCheckbox';
+export { ClayIconTile, type ClayIconTileProps } from './clay/ClayIconTile';
+export { ClayGlassIcon, type ClayGlassIconProps } from './clay/ClayGlassIcon';
+export { ClayProfileCard, type ClayProfileCardProps } from './clay/ClayProfileCard';
+export { ClayWordmark } from './clay/ClayWordmark';
 export { ClayTabBar, type ClayTabBarProps } from './clay/ClayTabBar';
 export { ClaySearchInput, type ClaySearchInputProps } from './clay/ClaySearchInput';
 
