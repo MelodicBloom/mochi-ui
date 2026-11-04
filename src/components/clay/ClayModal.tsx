@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayModalProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ const sizes = {
   lg: { maxWidth: 720 },
 };
 
-export const ClayModal: React.FC<ClayModalProps> = ({
+const ClayModalBase: React.FC<ClayModalProps> = ({
   isOpen,
   onClose,
   title,
@@ -124,5 +125,7 @@ export const ClayModal: React.FC<ClayModalProps> = ({
     </AnimatePresence>
   );
 };
+
+export const ClayModal = withClayReducedMotion(ClayModalBase, 'ClayModal');
 
 export default ClayModal;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayAvatarProps {
   src?: string;
@@ -24,7 +25,7 @@ const statusColors = {
   busy: '#FB7185',
 };
 
-export const ClayAvatar: React.FC<ClayAvatarProps> = ({
+const ClayAvatarBase: React.FC<ClayAvatarProps> = ({
   src,
   alt = 'Avatar',
   fallback,
@@ -105,5 +106,7 @@ export const ClayAvatar: React.FC<ClayAvatarProps> = ({
     </motion.div>
   );
 };
+
+export const ClayAvatar = withClayReducedMotion(ClayAvatarBase, 'ClayAvatar');
 
 export default ClayAvatar;

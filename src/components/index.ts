@@ -21,6 +21,8 @@ export { ClayIconTile, type ClayIconTileProps } from './clay/ClayIconTile';
 export { ClayGlassIcon, type ClayGlassIconProps } from './clay/ClayGlassIcon';
 export { ClayProfileCard, type ClayProfileCardProps } from './clay/ClayProfileCard';
 export { ClayWordmark } from './clay/ClayWordmark';
+export { ClayTabBar, type ClayTabBarProps } from './clay/ClayTabBar';
+export { ClaySearchInput, type ClaySearchInputProps } from './clay/ClaySearchInput';
 
 // Animation Systems
 export { 

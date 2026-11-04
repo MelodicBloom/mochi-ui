@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClaySkeletonProps {
   variant?: 'text' | 'circular' | 'rectangular' | 'rounded';
@@ -10,7 +11,7 @@ export interface ClaySkeletonProps {
   style?: React.CSSProperties;
 }
 
-export const ClaySkeleton: React.FC<ClaySkeletonProps> = ({
+const ClaySkeletonBase: React.FC<ClaySkeletonProps> = ({
   variant = 'text',
   width = '100%',
   height,
@@ -65,5 +66,7 @@ export const ClaySkeleton: React.FC<ClaySkeletonProps> = ({
     </>
   );
 };
+
+export const ClaySkeleton = withClayReducedMotion(ClaySkeletonBase, 'ClaySkeleton');
 
 export default ClaySkeleton;

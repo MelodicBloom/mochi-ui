@@ -1,5 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { motion, useSpring, useTransform, useMotionValue } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClaySliderProps {
   value?: number;
@@ -21,7 +22,7 @@ const colorwayGradients = {
   peach: 'linear-gradient(90deg, #FB923C, #FDBA74)',
 };
 
-export const ClaySlider: React.FC<ClaySliderProps> = ({
+const ClaySliderBase: React.FC<ClaySliderProps> = ({
   value: controlledValue,
   min = 0,
   max = 100,
@@ -211,5 +212,7 @@ export const ClaySlider: React.FC<ClaySliderProps> = ({
     </div>
   );
 };
+
+export const ClaySlider = withClayReducedMotion(ClaySliderBase, 'ClaySlider');
 
 export default ClaySlider;

@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import { motion, useSpring, useTransform, useMotionValue } from 'motion/react';
 import type { SpringOptions } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
+import { useReducedMotionSafe } from '../../hooks/useReducedMotionSafe';
 
 export interface ClayButtonProps {
   children: React.ReactNode;
@@ -12,6 +14,10 @@ export interface ClayButtonProps {
   icon?: React.ReactNode;
   iconPosition?: 'leading' | 'trailing';
   disabled?: boolean;
+  /** Shows a spinner, sets aria-busy and blocks clicks while true. */
+  loading?: boolean;
+  /** Accessible label announced while loading (default: "Loading"). */
+  loadingLabel?: string;
   onClick?: () => void;
   className?: string;
 }
@@ -33,7 +39,7 @@ const sizes = {
   lg: { padding: '24px 48px', fontSize: '18px' },
 };
 
-export const ClayButton: React.FC<ClayButtonProps> = ({
+const ClayButtonBase: React.FC<ClayButtonProps> = ({
   children,
   colorway = 'mint',
   size = 'md',
@@ -42,10 +48,14 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
   haptic = 'soft',
   icon,
   iconPosition = 'leading',
-  disabled = false,
+  disabled: disabledProp = false,
+  loading = false,
+  loadingLabel = 'Loading',
   onClick,
   className = '',
 }) => {
+  const disabled = disabledProp || loading;
+  const reduceMotion = useReducedMotionSafe();
   const [isPressed, setIsPressed] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
@@ -93,6 +103,8 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
     if (disabled) return;
     setIsPressed(true);
 
+    if (reduceMotion) { triggerHaptic(); return; }
+
     // Compression phase
     y.set(2);
     scale.set(0.95);
@@ -105,6 +117,11 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
   const handlePointerUp = () => {
     if (disabled) return;
     setIsPressed(false);
+
+    if (reduceMotion) {
+      y.jump(0); scale.jump(1); shadowY.jump(8); shadowBlur.jump(16);
+      return;
+    }
 
     // Release with overshoot (clay rebound)
     y.set(-6);
@@ -124,6 +141,7 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
   const handlePointerEnter = () => {
     if (!disabled) {
       setIsHovered(true);
+      if (reduceMotion) return;
       y.set(-4);
       shadowY.set(12);
       shadowBlur.set(20);
@@ -153,18 +171,32 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
         y,
         scale,
         boxShadow,
-        opacity: disabled ? 0.5 : 1,
-        cursor: disabled ? 'not-allowed' : 'pointer',
+        opacity: disabledProp ? 0.5 : loading ? 0.85 : 1,
+        cursor: loading ? 'progress' : disabled ? 'not-allowed' : 'pointer',
+        display: 'inline-flex', alignItems: 'center', gap: 8,
       }}
       onPointerDown={handlePointerDown}
       onPointerUp={handlePointerUp}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={disabled ? undefined : onClick}
-      data-state={isPressed ? 'active' : isHovered ? 'hover' : 'default'}
-      whileTap={{ scale: 0.95 }}
+      disabled={disabled}
+      aria-busy={loading || undefined}
+      aria-disabled={disabled || undefined}
+      data-loading={loading || undefined}
+      data-state={loading ? 'loading' : isPressed ? 'active' : isHovered ? 'hover' : 'default'}
+      whileTap={disabled ? undefined : { scale: 0.95 }}
     >
-      {icon && iconPosition === 'leading' && (
+      {loading && (
+        <span className="clay-button__spinner" role="status" aria-label={loadingLabel}>
+          <motion.svg viewBox="0 0 24 24" width="1em" height="1em" fill="none" stroke="currentColor" strokeWidth={3} strokeLinecap="round"
+            animate={reduceMotion ? undefined : { rotate: 360 }}
+            transition={{ repeat: Infinity, duration: 0.9, ease: 'linear' }} aria-hidden>
+            <path d="M12 3a9 9 0 1 1-9 9" opacity={0.9} />
+          </motion.svg>
+        </span>
+      )}
+      {!loading && icon && iconPosition === 'leading' && (
         <span className="clay-button__icon">{icon}</span>
       )}
       <span className="clay-button__text">{children}</span>
@@ -174,5 +206,7 @@ export const ClayButton: React.FC<ClayButtonProps> = ({
     </motion.button>
   );
 };
+
+export const ClayButton = withClayReducedMotion(ClayButtonBase, 'ClayButton');
 
 export default ClayButton;

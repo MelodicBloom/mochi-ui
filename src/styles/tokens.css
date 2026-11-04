@@ -4,7 +4,13 @@
 :root {
   /* === COLORS === */
   /* Rainbow */
+  /* NOTE: legacy name; value is lime (Tailwind lime-400). Kept for back-compat. */
   --mochi-mint: #A3E635;
+  --mochi-lime: var(--mochi-mint);
+  /* Reference-matched soft mint (styleguide toggle/tabs ≈ #8FE0B8). Use for mint UI fills. */
+  --mochi-mint-soft: #8FE0B8;
+  --mochi-mint-soft-deep: #5FCB97;
+  --mochi-mint-soft-ink: #1F4D38;
   --mochi-baby-blue: #7DD3FC;
   --mochi-lavender: #C084FC;
   --mochi-peach: #FB923C;
