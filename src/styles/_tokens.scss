@@ -4,7 +4,10 @@
 // Color Palette
 :root {
   // Rainbow
-  --mochi-mint-green: #A3E635;
+  // Aligned with src/styles/tokens.css (was lime #A3E635 under the mint-green name).
+  --mochi-mint: #A3E635;
+  --mochi-mint-green: #4ADE80;
+  --mochi-mint-soft: #8FE0B8;
   --mochi-baby-blue: #7DD3FC;
   --mochi-lavender: #C084FC;
   --mochi-peach: #FB923C;
