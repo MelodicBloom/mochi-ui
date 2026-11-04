@@ -189,3 +189,43 @@ mochi-ui/
 ## 📄 License
 
 MIT © 2026 Mochi UI
+
+## Storybook
+
+```bash
+npm run storybook        # dev server on http://localhost:6006
+npm run build-storybook  # static build → storybook-static/
+```
+
+Stories live in `src/stories/` (Clay/Button, Clay/Card, Clay/Surfaces, Motion/Clay Rebound, Motion/Spring Playground).
+The static build uses a relative base, so it can be served from any sub-path. To publish it next to the Astro site on
+GitHub Pages, run `npm run build:pages` (Astro → `dist/`, Storybook → `dist/storybook/`) in the Pages workflow and it
+will appear at `https://melodicbloom.github.io/mochi-ui/storybook/`. The existing Pages deploy is unchanged by this PR.
+
+## Spring physics playground
+
+Route: `/playground/springs` (Astro, `client:only` React) and Storybook **Motion/Spring Playground**.
+Tune stiffness / damping / mass (or pick a `MOCHI_SPRING_PRESETS` preset), see the damping ratio ζ, implied bounce and
+the step-response curve, and press-and-hold the clay blob to feel it. Driven by `@melodicbloom/mochi-spring`
+(`packages/spring-engine`). `prefers-reduced-motion: reduce` snaps springs to their target instantly.
+
+## npm package — `@melodicbloom/mochi-ui`
+
+`packages/mochi-ui` bundles the React components (ESM + CJS + `.d.ts`) with `react`, `react-dom`, `motion` as peers,
+plus `@melodicbloom/mochi-ui/styles.css` and `/tokens.css`. The spring engine is re-exported as `spring`.
+
+```bash
+npm run pkg:pack                                  # build + npm pack --dry-run
+cd packages/mochi-ui && npm publish --access public   # requires npm login with publish rights on @melodicbloom
+```
+
+## Visual proof
+
+[![mochi-ui hero loop](docs/visual-proof/hero-poster.jpg)](docs/visual-proof/hero.mp4)
+
+[![Live demo](https://img.shields.io/badge/live%20demo-melodicbloom.github.io%2Fmochi--ui-111?style=for-the-badge&logo=github)](https://melodicbloom.github.io/mochi-ui/)
+
+- `docs/visual-proof/hero.mp4` / `hero-poster.jpg` / `og.png` — rendered with [visual-proof-kit](https://github.com/MelodicBloom/visual-proof-kit)
+- `docs/visual-proof/demo-storybook.png`, `demo-springs.png` — Storybook + playground screenshots
+
+Lighthouse: run locally — `npx lighthouse https://melodicbloom.github.io/mochi-ui/ --view`

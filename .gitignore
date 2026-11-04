@@ -31,3 +31,6 @@ yarn-error.log*
 figma-export/*.json
 figma-export/*.css
 .vercel
+storybook-static/
+packages/mochi-ui/dist/
+*.tgz
