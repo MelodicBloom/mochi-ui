@@ -16,6 +16,8 @@ export { ClayModal, type ClayModalProps } from './clay/ClayModal';
 export { ClaySkeleton, type ClaySkeletonProps } from './clay/ClaySkeleton';
 export { ClayProgress, type ClayProgressProps } from './clay/ClayProgress';
 export { ClaySegmentedControl, type ClaySegmentedControlProps } from './clay/ClaySegmentedControl';
+export { ClayTabBar, type ClayTabBarProps } from './clay/ClayTabBar';
+export { ClaySearchInput, type ClaySearchInputProps } from './clay/ClaySearchInput';
 
 // Animation Systems
 export { 
