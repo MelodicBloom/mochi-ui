@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { motion, useSpring } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayInputProps {
   type?: 'text' | 'email' | 'password' | 'number' | 'search';
@@ -14,7 +15,7 @@ export interface ClayInputProps {
   style?: React.CSSProperties;
 }
 
-export const ClayInput: React.FC<ClayInputProps> = ({
+const ClayInputBase: React.FC<ClayInputProps> = ({
   type = 'text',
   placeholder,
   value: controlledValue,
@@ -154,5 +155,7 @@ export const ClayInput: React.FC<ClayInputProps> = ({
     </div>
   );
 };
+
+export const ClayInput = withClayReducedMotion(ClayInputBase, 'ClayInput');
 
 export default ClayInput;

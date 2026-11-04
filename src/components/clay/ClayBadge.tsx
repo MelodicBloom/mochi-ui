@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayBadgeProps {
   children: React.ReactNode;
@@ -23,7 +24,7 @@ const sizes = {
   md: { padding: '4px 16px', fontSize: 12 },
 };
 
-export const ClayBadge: React.FC<ClayBadgeProps> = ({
+const ClayBadgeBase: React.FC<ClayBadgeProps> = ({
   children,
   colorway = 'mint',
   size = 'md',
@@ -86,5 +87,7 @@ export const ClayBadge: React.FC<ClayBadgeProps> = ({
     </motion.span>
   );
 };
+
+export const ClayBadge = withClayReducedMotion(ClayBadgeBase, 'ClayBadge');
 
 export default ClayBadge;

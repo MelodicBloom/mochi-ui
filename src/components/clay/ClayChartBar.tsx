@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion, useSpring, useTransform } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayChartBarProps {
   value: number;
@@ -19,7 +20,7 @@ const colorwayColors = {
   peach: { main: '#FB923C', dark: '#FDBA74' },
 };
 
-export const ClayChartBar: React.FC<ClayChartBarProps> = ({
+const ClayChartBarBase: React.FC<ClayChartBarProps> = ({
   value,
   max = 100,
   label,
@@ -163,5 +164,7 @@ export const ClayChartBar: React.FC<ClayChartBarProps> = ({
     </div>
   );
 };
+
+export const ClayChartBar = withClayReducedMotion(ClayChartBarBase, 'ClayChartBar');
 
 export default ClayChartBar;

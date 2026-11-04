@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { withClayReducedMotion } from './withClayReducedMotion';
 
 export interface ClayTooltipProps {
   children: React.ReactNode;
@@ -9,7 +10,7 @@ export interface ClayTooltipProps {
   colorway?: 'dark' | 'light';
 }
 
-export const ClayTooltip: React.FC<ClayTooltipProps> = ({
+const ClayTooltipBase: React.FC<ClayTooltipProps> = ({
   children,
   content,
   position = 'top',
@@ -105,5 +106,7 @@ export const ClayTooltip: React.FC<ClayTooltipProps> = ({
     </>
   );
 };
+
+export const ClayTooltip = withClayReducedMotion(ClayTooltipBase, 'ClayTooltip');
 
 export default ClayTooltip;
