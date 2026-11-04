@@ -12,7 +12,7 @@ export interface ClayToggleProps {
 }
 
 const colorwayColors = {
-  mint: { active: 'hsl(142deg 76% 75%)', knob: '#ffffff' },
+  mint: { active: 'var(--mochi-mint-soft, #8FE0B8)', knob: '#ffffff' },
   blue: { active: 'hsl(200deg 90% 85%)', knob: '#ffffff' },
   pink: { active: 'hsl(350deg 90% 85%)', knob: '#ffffff' },
   lavender: { active: 'hsl(270deg 70% 85%)', knob: '#ffffff' },

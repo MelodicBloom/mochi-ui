@@ -11,7 +11,7 @@ export interface ClaySegmentedControlProps {
 }
 
 const colorwayBg = {
-  mint: 'hsl(142deg 76% 85%)',
+  mint: 'linear-gradient(160deg, #D6F7E6, var(--mochi-mint-soft, #8FE0B8))',
   blue: 'hsl(200deg 90% 90%)',
   pink: 'hsl(350deg 90% 90%)',
   lavender: 'hsl(270deg 70% 90%)',
@@ -58,7 +58,16 @@ const ClaySegmentedControlBase: React.FC<ClaySegmentedControlProps> = ({
           left: `calc(${selectedIndex * (100 / options.length)}% + 2px)`,
           borderRadius: 12,
           background: bg,
-          boxShadow: '2px 2px 6px rgba(0,0,0,0.1), inset 1px 1px 2px rgba(255,255,255,0.8)',
+          // Extruded rim + soft glow (ref styleguide selected pill): outer lift layers,
+          // a 1px light rim, top highlight and bottom inner shade.
+          boxShadow: [
+            '0 1px 2px rgba(90,80,120,0.10)',
+            '0 6px 14px rgba(90,80,120,0.14)',
+            '0 0 0 1px rgba(255,255,255,0.85)',
+            '0 0 14px 2px color-mix(in srgb, var(--mochi-mint-soft, #8FE0B8) 45%, transparent)',
+            'inset 0 2px 3px rgba(255,255,255,0.85)',
+            'inset 0 -3px 6px rgba(80,60,120,0.12)',
+          ].join(', '),
           zIndex: 0,
         }}
         transition={{ type: 'spring', stiffness: 400, damping: 30 }}
