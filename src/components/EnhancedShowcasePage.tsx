@@ -96,7 +96,7 @@ const FEATURES: Array<{
   desc: string;
   color: string;
 }> = [
-  { iconName: 'sun',      title: 'Spring Physics',    desc: 'Explore spring presets with editable mass, stiffness, and damping.',              color: 'mint'     },
+  { iconName: 'sun',      title: 'Spring Physics',    desc: 'Select a spring preset and compare the preview response.',                   color: 'mint'     },
   { iconName: 'chart',    title: 'Component Examples',    desc: 'Buttons, cards, inputs, toggles, sliders, charts, modals, tooltips, and more.',             color: 'blue'     },
   { iconName: 'calendar', title: 'Design Tokens',  desc: 'Explore the color, surface, and motion values used by this showcase.',                  color: 'pink'     },
   { iconName: 'bell',     title: 'Accessibility Features',     desc: 'ARIA labels, keyboard navigation, focus rings, and reduced-motion support.',                 color: 'lavender' },
@@ -272,7 +272,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
             </ScrollReveal>
             <ScrollReveal delay={0.15}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-                <ClayCard colorway="mint" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Zap /></div><div><div style={{ fontWeight: 600 }}>Spring Physics</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Explore how spring parameters change the preview response</div></div></div></ClayCard>
+                <ClayCard colorway="mint" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-mint)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Zap /></div><div><div style={{ fontWeight: 600 }}>Spring Physics</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Compare preview responses using spring presets</div></div></div></ClayCard>
                 <ClayCard colorway="blue" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-sky-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Accessibility /></div><div><div style={{ fontWeight: 600 }}>Accessibility First</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Keyboard and reduced-motion features; full accessibility audit pending</div></div></div></ClayCard>
                 <ClayCard colorway="pink" interactive={false}><div style={{ display: 'flex', alignItems: 'center', gap: 12 }}><div style={{ width: 40, height: 40, borderRadius: 12, background: 'var(--mochi-blossom)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white' }}><Icons.Palette /></div><div><div style={{ fontWeight: 600 }}>Design Tokens</div><div style={{ fontSize: 13, color: 'var(--text-secondary)' }}>Color and surface variables with light and dark themes</div></div></div></ClayCard>
               </div>
@@ -486,7 +486,7 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
               <h2 style={{ fontSize: 'clamp(1.5rem,3vw,2rem)', fontWeight: 700, marginBottom: 12, color: 'var(--text-primary)' }}>Ready to build something soft?</h2>
               <p style={{ color: 'var(--text-secondary)', marginBottom: 32, lineHeight: 1.6 }}>Run the showcase from source. The repository includes setup instructions and the components demonstrated above.</p>
               <div style={{ display: 'flex', gap: 16, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); window.open('https://github.com/MelodicBloom/mochi-ui', '_blank'); }}>View source</ClayButton>
+                <ClayButton colorway="mint" size="lg" onClick={() => { audio.playClick('soft'); window.open('https://github.com/MelodicBloom/mochi-ui/tree/main', '_blank'); }}>View source</ClayButton>
                 <ClayButton colorway="neutral" size="lg" onClick={() => { audio.playSquish(); setShowModal(true); }}>Setup notes</ClayButton>
               </div>
             </div>
@@ -495,8 +495,8 @@ const ShowcaseContent: React.FC<ShowcaseContentProps> = ({ physicsPreset, setPhy
 
         <ClayModal isOpen={showModal} onClose={() => { audio.pop(); setShowModal(false); }} title="Source and setup" size="md">
           <div style={{ padding: 24 }}>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Read the repository README for setup instructions, or explore the live playground to inspect the component and spring examples.</p>
-            <p style={{ marginBottom: 24 }}><a href="https://github.com/MelodicBloom/mochi-ui#readme" target="_blank" rel="noopener noreferrer">Open source and setup instructions</a></p>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: 24 }}>Check out the repository's main branch, then follow its README setup instructions. Explore the live playground to inspect the component and spring examples.</p>
+            <p style={{ marginBottom: 24 }}><a href="https://github.com/MelodicBloom/mochi-ui/blob/main/README.md" target="_blank" rel="noopener noreferrer">Open source and setup instructions</a></p>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'flex-end' }}>
               <ClayButton colorway="neutral" onClick={() => { audio.pop(); setShowModal(false); }}>Close</ClayButton>
               <ClayButton colorway="mint" onClick={() => { audio.success(); scrollTo('playground'); setShowModal(false); }}>Open Playground</ClayButton>

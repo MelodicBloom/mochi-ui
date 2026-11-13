@@ -19,4 +19,5 @@ jobs:
       - run: npm run typecheck
       - run: npm run build
       - run: npm ls three postprocessing
+      - run: node --test scripts/check-pages-assets.test.mjs
       - run: node scripts/check-pages-assets.mjs
