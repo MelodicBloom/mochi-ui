@@ -1,4 +1,6 @@
 ---
+import "../styles/tokens.css";
+import "../styles/clay.css";
 export interface Props {
   title: string;
   description?: string;
@@ -43,8 +45,6 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://mochi-ui
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/styles/tokens.css" />
-  <link rel="stylesheet" href="/styles/clay.css" />
   
   <script is:inline>
     (function() {
