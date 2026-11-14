@@ -22,13 +22,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Node 20
+      - name: Node 22
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
 
       - name: Install
-        run: npm install
+        run: npm ci
 
       - name: Build Astro site
         run: npm run build
